@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/theme_item_rl"
+    android:id="@+id/sleep_item_rl"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:clickable="true"
@@ -9,7 +9,7 @@
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:layout_centerVertical="true"
-        android:id="@+id/theme_iv"
+        android:id="@+id/sleep_iv"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_width="20dp"
@@ -20,16 +20,16 @@
         app:riv_oval="true"
         android:background="@color/colorAccent" />
     <TextView
-        android:id="@+id/theme_name_tv"
+        android:id="@+id/sleep_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_toRightOf="@id/theme_iv"
+        android:layout_toRightOf="@id/sleep_iv"
         android:layout_marginLeft="16dp"
         android:layout_centerVertical="true"
         android:textColor="@color/grey900"
         android:gravity="center"/>
     <Button
-        android:id="@+id/theme_select_tv"
+        android:id="@+id/sleep_select_tv"
         android:layout_width="70dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"

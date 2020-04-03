@@ -1,5 +1,6 @@
 package ml.yike.yueyin.activity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -143,16 +144,16 @@ public class HomeActivity extends PlayBarBaseActivity {
         navHeadImage = (ImageView)headerView.findViewById(R.id.nav_head_bg_iv);
         loadBingPic();
 
-        refreshNightModeTitle();
+        refreshNightModeTitleAndIcon();
 
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 drawerLayout.closeDrawers();
                 switch (item.getItemId()){
-                    case R.id.nav_s_shutdown:  //主题中心
+                    case R.id.nav_s_shutdown:  //定时关闭
                         isStartTheme = true;
-                        Intent intentTheme = new Intent(HomeActivity.this,ThemeActivity.class);
+                        Intent intentTheme = new Intent(HomeActivity.this, SleepActivity.class);
                         startActivity(intentTheme);
                         break;
                     case R.id.nav_night_mode:  //夜间模式
@@ -162,10 +163,10 @@ public class HomeActivity extends PlayBarBaseActivity {
                             MyMusicUtil.setTheme(HomeActivity.this,preTheme);
                         }else {  //当前为日间模式，则切换到夜间模式
                             MyMusicUtil.setNightMode(HomeActivity.this,true);
-                            MyMusicUtil.setTheme(HomeActivity.this,ThemeActivity.THEME_SIZE-1);
+                            MyMusicUtil.setTheme(HomeActivity.this, SleepActivity.SLEEP_SIZE -1);
                         }
                         recreate();  //重新加载之后才能切换成功
-                        refreshNightModeTitle();
+                        refreshNightModeTitleAndIcon(); //动窗口显示的文字与icon
                         break;
                     case R.id.nav_about_me:  //关于
                         Intent aboutTheme = new Intent(HomeActivity.this,AboutActivity.class);
@@ -192,13 +193,15 @@ public class HomeActivity extends PlayBarBaseActivity {
     }
 
     /**
-     * 滑动窗口显示的文字
+     * 滑动窗口显示的文字与icon
      */
-    private void refreshNightModeTitle(){
+    private void refreshNightModeTitleAndIcon(){
         if (MyMusicUtil.getNightMode(HomeActivity.this)){
             navView.getMenu().findItem(R.id.nav_night_mode).setTitle("日间模式");
+            navView.getMenu().findItem(R.id.nav_night_mode).setIcon(R.drawable.nav_day);
         }else {
             navView.getMenu().findItem(R.id.nav_night_mode).setTitle("夜间模式");
+            navView.getMenu().findItem(R.id.nav_night_mode).setIcon(R.drawable.nav_night);
         }
     }
 
@@ -316,6 +319,8 @@ public class HomeActivity extends PlayBarBaseActivity {
     /**
      * 设置双次返回
      */
+
+    @SuppressLint("WrongConstant")
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){

@@ -1,6 +1,5 @@
 package ml.yike.yueyin.util;
 
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +11,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.widget.Toast;
 
-import ml.yike.yueyin.activity.ThemeActivity;
+import ml.yike.yueyin.activity.SleepActivity;
 import ml.yike.yueyin.database.DBManager;
 import ml.yike.yueyin.entity.AlbumInfo;
 import ml.yike.yueyin.entity.FolderInfo;
@@ -314,10 +313,10 @@ public class MyMusicUtil {
      */
     public static void setTheme(Context context, int position) {
         int preSelect = getTheme(context);
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.THEME, Context.MODE_PRIVATE);
-        sharedPreferences.edit().putInt("theme_select", position).commit();
-        if (preSelect != ThemeActivity.THEME_SIZE - 1) {
-            sharedPreferences.edit().putInt("pre_theme_select", preSelect).commit();
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.Theme, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt("Theme_select", position).commit();
+        if (preSelect != SleepActivity.SLEEP_SIZE - 1) {
+            sharedPreferences.edit().putInt("pre_Theme_select", preSelect).commit();
         }
     }
 
@@ -326,8 +325,8 @@ public class MyMusicUtil {
      * 得到选择主题的id
      */
     public static int getTheme(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.THEME, Context.MODE_PRIVATE);
-        return sharedPreferences.getInt("theme_select", 0);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.Theme, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt("Theme_select", 0);
     }
 
 
@@ -335,8 +334,8 @@ public class MyMusicUtil {
      * 得到上一次的日间模式的主题
      */
     public static int getPreTheme(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.THEME, Context.MODE_PRIVATE);
-        return sharedPreferences.getInt("pre_theme_select", 0);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.Theme, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt("pre_Theme_select", 0);
     }
 
 
@@ -349,7 +348,7 @@ public class MyMusicUtil {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.THEME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.Theme, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor =  sharedPreferences.edit();
         editor.putBoolean("night", mode).commit();
     }
@@ -359,7 +358,7 @@ public class MyMusicUtil {
      * 得到是否是夜间模式
      */
     public static boolean getNightMode(Context context) {
-       SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.THEME,Context.MODE_PRIVATE);
+       SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.Theme,Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean("night",false);
     }
 

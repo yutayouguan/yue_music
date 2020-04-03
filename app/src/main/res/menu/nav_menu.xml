@@ -3,7 +3,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_s_shutdown"
-            android:icon="@drawable/nav_s_shutdown"
+            android:icon="@drawable/nav_sleep"
             android:title="定时关闭" />
         <item
             android:id="@+id/nav_night_mode"
