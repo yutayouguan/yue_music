@@ -9,9 +9,7 @@ import android.widget.TextView;
 
 import ml.yike.yueyin.R;
 
-/**
- * Created by lijunyan on 2017/1/16.
- */
+
 
 public class CustomFragment extends Fragment {
 

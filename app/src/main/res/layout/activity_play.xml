@@ -87,7 +87,14 @@
                 <me.zhengken.lyricview.LyricView
                     android:id="@+id/custom_lyric_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    tools:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/music_cover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/default_cover" />
 
 
             </RelativeLayout>

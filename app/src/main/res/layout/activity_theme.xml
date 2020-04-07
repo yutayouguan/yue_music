@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ml.yike.yueyin.activity.SleepActivity">
+    tools:context="ml.yike.yueyin.activity.ThemeActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/sleep_toolbar"
+        android:id="@+id/theme_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@drawable/theme_bg"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/sleep_rv"
+        android:id="@+id/theme_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/sleep_toolbar"
+        android:layout_below="@id/theme_toolbar"
         android:background="?attr/appbg"/>
 </RelativeLayout>

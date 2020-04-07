@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 
-public class SleepInfo implements Parcelable {
+public class ThemeInfo implements Parcelable {
 
     private String name;
 
@@ -47,7 +47,7 @@ public class SleepInfo implements Parcelable {
         isSelect = select;
     }
 
-    public SleepInfo() {}
+    public ThemeInfo() {}
 
 
     @Override
@@ -65,20 +65,20 @@ public class SleepInfo implements Parcelable {
     }
 
 
-    public static final Creator<SleepInfo> CREATOR = new Creator<SleepInfo>() {
+    public static final Creator<ThemeInfo> CREATOR = new Creator<ThemeInfo>() {
         @Override
-        public SleepInfo createFromParcel(Parcel source) {
-            return new SleepInfo(source);
+        public ThemeInfo createFromParcel(Parcel source) {
+            return new ThemeInfo(source);
         }
 
         @Override
-        public SleepInfo[] newArray(int size) {
-            return new SleepInfo[size];
+        public ThemeInfo[] newArray(int size) {
+            return new ThemeInfo[size];
         }
     };
 
 
-    protected SleepInfo(Parcel in) {
+    protected ThemeInfo(Parcel in) {
         this.name = in.readString();
         this.color = in.readInt();
         this.background = in.readInt();

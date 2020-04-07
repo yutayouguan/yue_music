@@ -117,5 +117,5 @@ public class Constant {
 
 
 	//主题
-	public static final String Theme="Theme";
+	public static final String THEME="theme";
 }

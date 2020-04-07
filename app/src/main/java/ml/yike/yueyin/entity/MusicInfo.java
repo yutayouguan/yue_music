@@ -1,10 +1,13 @@
 package ml.yike.yueyin.entity;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 
 public class MusicInfo implements Comparable, Parcelable {
+
 
     private int id;
 
@@ -14,11 +17,17 @@ public class MusicInfo implements Comparable, Parcelable {
 
     private String album;
 
+    private int album_id;
+
     private String duration;
 
     private String path;
 
     private String parentPath; //父目录路径
+
+    private Uri albumUri;              //存储音乐封面的Uri地址
+
+    public Bitmap thumb; //存储封面图片
 
     private int love; //1设置我喜欢 0未设置
 
@@ -29,8 +38,22 @@ public class MusicInfo implements Comparable, Parcelable {
         return album;
     }
 
+    public Uri getalbumUri() {
+        return albumUri;
+    }
+
+    public int getAlbumId() {
+        return album_id;
+    }
+
     public void setAlbum(String album) {
         this.album = album;
+    }
+    public void setAlbumUri(Uri albumUri) {
+        this.albumUri = albumUri;
+    }
+    public void setAlbumId(int album_id) {
+        this.album_id = album_id;
     }
 
     public int getId() {
@@ -102,7 +125,7 @@ public class MusicInfo implements Comparable, Parcelable {
      */
     @Override
     public int compareTo(Object o) {
-        MusicInfo info = (MusicInfo)o;
+        MusicInfo info = (MusicInfo) o;
         if (info.getFirstLetter().equals("#")) return -1;
         if (firstLetter.equals("#")) return 1;
         return this.firstLetter.compareTo(info.getFirstLetter());
@@ -167,5 +190,7 @@ public class MusicInfo implements Comparable, Parcelable {
             return new MusicInfo[size];
         }
     };
+
+
 }
 

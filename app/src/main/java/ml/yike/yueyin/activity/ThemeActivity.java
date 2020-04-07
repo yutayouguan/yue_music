@@ -18,35 +18,38 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import ml.yike.yueyin.R;
-import ml.yike.yueyin.entity.SleepInfo;
+import ml.yike.yueyin.entity.ThemeInfo;
 import ml.yike.yueyin.util.MyMusicUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SleepActivity extends BaseActivity {
-    public static int SLEEP_SIZE = 11;
+public class ThemeActivity extends BaseActivity {
+    public static int THEME_SIZE = 11;
 
-    private String[] sleepType = {"不开启", "10分钟", "20分钟","30分钟","","45分钟","60分钟","自定义"};
-        
+    private String[] themeType = {"哔哩粉", "知乎蓝", "酷安绿","网易红","藤萝紫","碧海蓝","樱草绿","咖啡棕","柠檬橙","星空灰","夜间模式"};
+
+    private int[] colors = {R.color.biliPink, R.color.zhihuBlue, R.color.kuanGreen, R.color.cloudRed,
+            R.color.tengluoPurple, R.color.seaBlue, R.color.grassGreen, R.color.coffeeBrown,
+            R.color.lemonOrange,R.color.startSkyGray,R.color.nightActionbar};
 
     private RecyclerView recyclerView;
 
-    private SleepAdapter adapter;
+    private ThemeAdapter adapter;
 
     private Toolbar toolbar;
 
-    private int selectSleep = 0;
+    private int selectTheme = 0;
 
-    private List<SleepInfo> sleepInfoList = new ArrayList<>();
+    private List<ThemeInfo> themeInfoList = new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sleep);
-        selectSleep = MyMusicUtil.getTheme(SleepActivity.this);
-        toolbar = (Toolbar) findViewById(R.id.sleep_toolbar);
+        setContentView(R.layout.activity_theme);
+        selectTheme = MyMusicUtil.getTheme(ThemeActivity.this);
+        toolbar = (Toolbar) findViewById(R.id.theme_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -58,19 +61,20 @@ public class SleepActivity extends BaseActivity {
 
 
     private void init(){
-        for (int i = 0; i < sleepType.length; i++){
-            SleepInfo sleepInfo = new SleepInfo();
-            sleepInfo.setName(sleepType[i]);
-            sleepInfo.setSelect((selectSleep == i) ? true : false);
-            if (i == sleepType.length-1){  //如果是最后一个夜间模式
-                sleepInfo.setBackground(R.color.nightBg);  //设置成暗色
+        for (int i = 0 ;i < themeType.length;i++){
+            ThemeInfo themeInfo = new ThemeInfo();
+            themeInfo.setName(themeType[i]);
+            themeInfo.setColor(colors[i]);
+            themeInfo.setSelect((selectTheme == i) ? true : false);
+            if (i == themeType.length-1){  //如果是最后一个夜间模式
+                themeInfo.setBackground(R.color.nightBg);  //设置成暗色
             }else {
-                sleepInfo.setBackground(R.color.colorWhite);  //设置成亮色
+                themeInfo.setBackground(R.color.colorWhite);  //设置成亮色
             }
-            sleepInfoList.add(sleepInfo);
+            themeInfoList.add(themeInfo);
         }
-        recyclerView = (RecyclerView)findViewById(R.id.sleep_rv);
-        adapter = new SleepAdapter();
+        recyclerView = (RecyclerView)findViewById(R.id.theme_rv);
+        adapter = new ThemeAdapter();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -83,7 +87,7 @@ public class SleepActivity extends BaseActivity {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case android.R.id.home:
-                Intent intent = new Intent(SleepActivity.this,HomeActivity.class);  //更改主题之后需要重新启动Activity
+                Intent intent = new Intent(ThemeActivity.this,HomeActivity.class);  //更改主题之后需要重新启动Activity
                 startActivity(intent);
                 break;
         }
@@ -97,7 +101,7 @@ public class SleepActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
-            Intent intent = new Intent(SleepActivity.this,HomeActivity.class);
+            Intent intent = new Intent(ThemeActivity.this,HomeActivity.class);
             startActivity(intent);
             return true;
         }
@@ -106,9 +110,9 @@ public class SleepActivity extends BaseActivity {
 
 
 
-    private class SleepAdapter extends RecyclerView.Adapter<SleepAdapter.ViewHolder>{
+    private class ThemeAdapter extends RecyclerView.Adapter<ThemeAdapter.ViewHolder>{
 
-        public SleepAdapter() {}
+        public ThemeAdapter() {}
 
         class ViewHolder extends RecyclerView.ViewHolder {
             RelativeLayout relativeLayout;
@@ -118,17 +122,17 @@ public class SleepActivity extends BaseActivity {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                this.relativeLayout = (RelativeLayout) itemView.findViewById(R.id.sleep_item_rl);
-                this.circleImage = (ImageView) itemView.findViewById(R.id.sleep_iv);
-                this.nameText = (TextView) itemView.findViewById(R.id.sleep_name_tv);
-                this.selectButton = (Button) itemView.findViewById(R.id.sleep_select_tv);
+                this.relativeLayout = (RelativeLayout) itemView.findViewById(R.id.theme_item_rl);
+                this.circleImage = (ImageView) itemView.findViewById(R.id.theme_iv);
+                this.nameText = (TextView) itemView.findViewById(R.id.theme_name_tv);
+                this.selectButton = (Button) itemView.findViewById(R.id.theme_select_tv);
             }
         }
 
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(SleepActivity.this).inflate(R.layout.change_sleep_item, parent, false);
+            View view = LayoutInflater.from(ThemeActivity.this).inflate(R.layout.change_theme_item, parent, false);
             ViewHolder viewHolder = new ViewHolder(view);
             return viewHolder;
         }
@@ -136,38 +140,38 @@ public class SleepActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, final int position) {
-            final SleepInfo sleepInfo = sleepInfoList.get(position);
-            if (selectSleep == SLEEP_SIZE -1){  //如果是夜间模式
+            final ThemeInfo themeInfo = themeInfoList.get(position);
+            if (selectTheme == THEME_SIZE-1){  //如果是夜间模式
                 holder.relativeLayout.setBackgroundResource(R.drawable.selector_layout_night);
-                holder.selectButton.setBackgroundResource(R.drawable.shape_theme_btn_day);
+                holder.selectButton.setBackgroundResource(R.drawable.shape_theme_btn_night);
             }else {  //日间模式
                 holder.relativeLayout.setBackgroundResource(R.drawable.selector_layout_day);
                 holder.selectButton.setBackgroundResource(R.drawable.shape_theme_btn_day);
             }
             holder.selectButton.setPadding(0,0,0,0);
-            if (sleepInfo.isSelect()){
+            if (themeInfo.isSelect()){
                 holder.circleImage.setImageResource(R.drawable.tick);
                 holder.selectButton.setText("使用中");
-                holder.selectButton.setTextColor(getResources().getColor(sleepInfo.getColor()));  //设置文字颜色
+                holder.selectButton.setTextColor(getResources().getColor(themeInfo.getColor()));  //设置文字颜色
             }else {
                 holder.circleImage.setImageBitmap(null);
                 holder.selectButton.setText("使用");
                 holder.selectButton.setTextColor(getResources().getColor(R.color.grey500));
             }
-            holder.circleImage.setBackgroundResource(sleepInfo.getColor());
-            holder.nameText.setTextColor(getResources().getColor(sleepInfo.getColor()));
-            holder.nameText.setText(sleepInfo.getName());
+            holder.circleImage.setBackgroundResource(themeInfo.getColor());
+            holder.nameText.setTextColor(getResources().getColor(themeInfo.getColor()));
+            holder.nameText.setText(themeInfo.getName());
             holder.selectButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    refreshSleep(sleepInfo,position);
+                    refreshTheme(themeInfo,position);
                 }
             });
 
             holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    refreshSleep(sleepInfo,position);
+                    refreshTheme(themeInfo,position);
                 }
             });
         }
@@ -175,7 +179,7 @@ public class SleepActivity extends BaseActivity {
 
         @Override
         public int getItemCount() {
-            return sleepInfoList.size();
+            return themeInfoList.size();
         }
     }
 
@@ -183,24 +187,24 @@ public class SleepActivity extends BaseActivity {
     /**
      * 更新主题
      */
-    private void refreshSleep(SleepInfo sleepInfo, int position){
-        if (position == (SLEEP_SIZE -1)){  //是夜间模式
-            MyMusicUtil.setNightMode(SleepActivity.this,true);
-        } else if(MyMusicUtil.getNightMode(SleepActivity.this)){
-            MyMusicUtil.setNightMode(SleepActivity.this,false);
+    private void refreshTheme(ThemeInfo themeInfo,int position){
+        if (position == (THEME_SIZE-1)){  //是夜间模式
+            MyMusicUtil.setNightMode(ThemeActivity.this,true);
+        } else if(MyMusicUtil.getNightMode(ThemeActivity.this)){
+            MyMusicUtil.setNightMode(ThemeActivity.this,false);
         }
 
-        selectSleep = position;
-        MyMusicUtil.setTheme(SleepActivity.this,position);
+        selectTheme = position;
+        MyMusicUtil.setTheme(ThemeActivity.this,position);
 
         //进行颜色的转换
-        toolbar.setBackgroundColor(getResources().getColor(sleepInfo.getColor()));
-        recyclerView.setBackgroundColor(getResources().getColor(sleepInfo.getBackground()));
+        toolbar.setBackgroundColor(getResources().getColor(themeInfo.getColor()));
+        recyclerView.setBackgroundColor(getResources().getColor(themeInfo.getBackground()));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {  //状态栏颜色转换
-            getWindow().setStatusBarColor(getResources().getColor(sleepInfo.getColor()));
+            getWindow().setStatusBarColor(getResources().getColor(themeInfo.getColor()));
         }
-        for (SleepInfo info : sleepInfoList){
-            if (info.getName().equals(sleepInfo.getName())){
+        for (ThemeInfo info : themeInfoList){
+            if (info.getName().equals(themeInfo.getName())){
                 info.setSelect(true);  //设置被选中
             }else {
                 info.setSelect(false);

@@ -467,7 +467,30 @@ public class DBManager {
         }
         return path;
     }
-
+    /**
+     * 获取歌曲的路径
+     */
+    public String getMusicParentPath(int id) {
+        if (id == -1) {
+            return null;
+        }
+        String parentpath = null;
+        Cursor cursor = null;
+        setLastPlay(id);   //每次播放一首新歌前都需要获取歌曲路径，所以可以在此设置最近播放
+        try {
+            cursor = db.query(DatabaseHelper.MUSIC_TABLE, null, ID_COLUMN + " = ?", new String[]{"" + id}, null, null, null);
+            if (cursor.moveToFirst()) {
+                parentpath = cursor.getString(cursor.getColumnIndex(DatabaseHelper.PARENT_PATH_COLUMN));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return  parentpath;
+    }
     /**
      * 获取音乐表中第一首音乐id
      */

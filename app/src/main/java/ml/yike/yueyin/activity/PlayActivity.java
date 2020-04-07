@@ -137,6 +137,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         singerNameText = (TextView) findViewById(R.id.tv_artist);
         seekBar = (SeekBar) findViewById(R.id.activity_play_seekbar);
         mLyricView = (LyricView) findViewById(R.id.custom_lyric_view);
+
         backImage.setOnClickListener(this);
         playImage.setOnClickListener(this);
         menuImage.setOnClickListener(this);
@@ -177,10 +178,15 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mProgress = progress;
-                initTime();
+
+                 mProgress = progress;
+                 initTime();
+
             }
+
+
         });
+
     }
 
 
@@ -262,6 +268,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
+
     /**
      * 设置歌曲的播放时间
      */
@@ -277,21 +284,13 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         int musicId;
         musicId = MyMusicUtil.getIntSharedPreference(Constant.KEY_ID);
         String mSongPath = dbManager.getMusicPath(musicId);
-        String lrcPath = mSongPath.substring(0, mSongPath.length() - 3) + "lrc";
+        String lrcPath = mSongPath.substring(0, mSongPath.indexOf(".")) + ".lrc";
+
+//        String lrcPath = mSongPath.substring(0, mSongPath.length() - 3) + "lrc";
         File lrcFile = new File(lrcPath);
         mLyricView.setLyricFile(lrcFile);// 设置歌词文件
 //        mLyricView.setCurrentTimeMillis(current);//将歌词滚动到指定的TimeMillis
-        //单击播放图标时回调
-        mLyricView.setOnPlayerClickListener(new LyricView.OnPlayerClickListener() {
-            @Override
-            public void onPlayerClicked(long progress, String content) {
-                //发送播放请求
-                Intent intent = new Intent(MusicPlayerService.PLAYER_MANAGER_ACTION);
-                intent.putExtra("cmd", Constant.COMMAND_PROGRESS);
-                intent.putExtra("current", progress);
-                sendBroadcast(intent);
-            }
-        });
+      OnLrcViewPlayer();
 
     }
 
@@ -299,7 +298,14 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     public void updateLrcView(int progress) {
         mLyricView.setCurrentTimeMillis(progress);
     }
+    public void OnLrcViewPlayer() {
+        mLyricView.setOnPlayerClickListener(new LyricView.OnPlayerClickListener() {
+            @Override
+            public void onPlayerClicked(long progress, String s) {
 
+            }
+        });
+    }
     private String formatTime(long time) {
         return formatTime("mm:ss", time);
     }

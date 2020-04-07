@@ -1,8 +1,11 @@
 package ml.yike.yueyin.activity;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -29,11 +33,13 @@ import ml.yike.yueyin.entity.MusicInfo;
 import ml.yike.yueyin.service.MusicPlayerService;
 import ml.yike.yueyin.util.ChineseToEnglish;
 import ml.yike.yueyin.util.Constant;
+import ml.yike.yueyin.util.ImageUtil;
 import ml.yike.yueyin.util.MyMusicUtil;
 import ml.yike.yueyin.view.RadarView;
 
 public class ScanActivity extends BaseActivity {
 
+    private static final String TAG = "悦音";
     private DBManager dbManager;
 
     private Toolbar toolbar;
@@ -178,7 +184,7 @@ public class ScanActivity extends BaseActivity {
                 }
             }
         });
-       radarView.setVisibility(View.INVISIBLE);
+        radarView.setVisibility(View.INVISIBLE);
     }
 
 
@@ -196,21 +202,38 @@ public class ScanActivity extends BaseActivity {
                             MediaStore.Audio.Media.TITLE,               //歌曲名称
                             MediaStore.Audio.Media.ARTIST,              //歌曲歌手
                             MediaStore.Audio.Media.ALBUM,               //歌曲的专辑名
+                            MediaStore.Audio.Media.ALBUM_ID,            //专辑ID，在后面获取封面图片时会用到
                             MediaStore.Audio.Media.DURATION,            //歌曲时长
                             MediaStore.Audio.Media.DATA};               //歌曲文件的全路径
-
-                    Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                            muiscInfoArray, null, null, null);  //内容提供器获取歌曲信息
+                    Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI; //指向外部存储的uri
+//                  String where = MediaStore.Audio.Media.DATA + " like \"%"+"/music"+"%\"";  //扫描包含music关键字的路径
+//                  String where = MediaStore.Audio.Media.DATA + " like \"%"+getString(R.string.search_path)+"%\"";
+                    String where = null; //默认全盘扫描
+                    String [] keywords = null;
+                    String sortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;  //查询结果的排序方式，这里选择默认排序方式
+                    ContentResolver resolver = getContentResolver();
+                    Cursor cursor = resolver.query(musicUri,
+                            muiscInfoArray, where, keywords, sortOrder);  //内容提供器获取歌曲信息
 
                     if (cursor != null && cursor.getCount() != 0) {
                         musicInfoList = new ArrayList<MusicInfo>();
                         while (cursor.moveToNext()) {
+                            //获取音乐的名称
                             String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
+                            //获取该音乐的歌手
                             String singer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST));
+                            //获取该音乐所在专辑名称
                             String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM));
-                            String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
-                            String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION));
+                            //获取该音乐所在专辑的id
+                            int albumId = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID));
+                            //再通过AlbumId组合出专辑的Uri地址
+                            Uri albumUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
 
+                            //获取该音乐的全路径
+                            String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
+                            //获取音乐的时长，单位是毫秒
+                            String duration = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION));
+                            //音乐时长小于60秒则调过
                             if (checkBox.isChecked() && duration != null && Long.valueOf(duration) < 1000 * 60) {  //如果勾选checkBox
                                 continue;
                             }
@@ -222,10 +245,19 @@ public class ScanActivity extends BaseActivity {
                             musicInfo.setName(name);
                             musicInfo.setSinger(singer);
                             musicInfo.setAlbum(album);
+                            musicInfo.setAlbumId(albumId);
+                            musicInfo.setAlbumUri(albumUri);
                             musicInfo.setPath(path);
                             musicInfo.setParentPath(parentPath);
                             musicInfo.setFirstLetter(ChineseToEnglish.StringToPinyinSpecial(name).toUpperCase().charAt(0) + "");  //设置该歌曲拼音的第一个字母
                             musicInfoList.add(musicInfo);
+
+                            if (musicUri != null) {
+                                ContentResolver res = getContentResolver();
+                                musicInfo.thumb = ImageUtil.createThumbFromUir(res, albumUri);
+                            }
+                            Log.d(TAG, "real music found: " + path);
+
 
                             progress++;
                             musicCount = cursor.getCount();
