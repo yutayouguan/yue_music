@@ -13,7 +13,10 @@
     <color name="colorRed">#ff0000</color>
     <color name="colorGreen">#00ff00</color>
     <color name="colorBlue">#0000ff</color>
-
+    <color name="white">#FFFFFF</color>
+    <color name="artist">#8D8D8D</color>
+    <color name="mask_image_view">#44555555</color>
+    <color name="lrc_view_text">#8D8D8D</color>
     <color name="grey50">#fffafafa</color>
     <color name="grey200">#ffeeeeee</color>
     <color name="grey500">#ff9e9e9e</color>

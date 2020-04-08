@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class ImageUtil {
-    public static Bitmap createThumbFromUir(ContentResolver res, Uri albumUri) {
+    public static Bitmap createAlbumImageFromUir(ContentResolver res, Uri albumUri) {
         InputStream in = null;
         Bitmap bmp = null;
         try {

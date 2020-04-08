@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+
     /**
      * 数据库的名字
      */
@@ -60,7 +61,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     private String createLastPlayTable = "create table if not exists " + LAST_PLAY_TABLE +" ("
             + ID_COLUMN +" integer,"
-            + "FOREIGN KEY(id) REFERENCES "+ MUSIC_TABLE + " (id) ON DELETE CASCADE);";
+            + "FOREIGN KEY(id) REFERENCES "
+			+ MUSIC_TABLE
+			+ " (id) ON DELETE CASCADE);";
 
     /**
      * 歌单表
@@ -72,7 +75,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * 创建歌单表
      */
     private String createPlaylistTable = "create table if not exists " + PLAY_LIST_TABLE + " ("
-            + ID_COLUMN +" integer PRIMARY KEY autoincrement,"
+            + ID_COLUMN
+			+" integer PRIMARY KEY autoincrement,"
             + NAME_COLUMN + " text);";
 
     /**
@@ -109,6 +113,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		if (oldVersion < VERSION){
+			//如果遇到数据库更新，我们简单的处理为删除以前的表，重新创建一张
 			db.execSQL("drop table if exists " + MUSIC_TABLE);
 			db.execSQL("drop table if exists " + LAST_PLAY_TABLE);
 			db.execSQL("drop table if exists " + PLAY_LIST_TABLE);

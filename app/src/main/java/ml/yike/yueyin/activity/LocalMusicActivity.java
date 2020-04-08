@@ -1,6 +1,8 @@
 package ml.yike.yueyin.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -71,6 +73,7 @@ public class LocalMusicActivity extends PlayBarBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_music);
+
         toolbar = (Toolbar)findViewById(R.id.local_music_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -185,4 +188,6 @@ public class LocalMusicActivity extends PlayBarBaseActivity {
             return fragmentList.size();
         }
     }
+
+
 }

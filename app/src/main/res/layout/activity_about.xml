@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,192 +17,148 @@
             android:background="@drawable/theme_bg"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:src="@mipmap/ic_launcher" />
-
-        <TextView
-            android:id="@+id/about_version"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:text="当前版本1.0" />
-
-        <TextView
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="?attr/divider"
-            android:gravity="center_vertical"
-            android:paddingLeft="16dp"
-            android:text="关于作者" />
+            android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/about_email_ll"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="vertical">
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:gravity="center_vertical|bottom"
-                android:paddingLeft="20dp"
-                android:paddingBottom="3dp"
-                android:text="邮箱" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:gravity="center_vertical|top"
-                android:paddingLeft="20dp"
-                android:paddingTop="3dp"
-                android:text="wmdyx@outlook.com" />
-        </LinearLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?attr/divider"></View>
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:src="@mipmap/ic_launcher" />
 
-        <LinearLayout
-            android:id="@+id/about_start_ll"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="vertical">
+                <TextView
+                    android:id="@+id/about_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:text="@string/currentVersion" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:gravity="center_vertical|bottom"
-                android:paddingLeft="20dp"
-                android:paddingBottom="3dp"
-                android:text="Github" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="?attr/divider"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:text="@string/aboutTheAuthor" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:gravity="center_vertical|top"
-                android:paddingLeft="20dp"
-                android:paddingTop="3dp"
-                android:text="https://github.com/yutayouguan" />
-        </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/about_email_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="vertical">
 
-        <View
-            android:id="@+id/view"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?attr/divider"></View>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:gravity="center_vertical|bottom"
+                        android:paddingLeft="20dp"
+                        android:paddingBottom="3dp"
+                        android:text="@string/above_mail" />
 
-        <LinearLayout
-            android:id="@+id/about_blog_ll"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:gravity="center_vertical|top"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="3dp"
+                        android:text="@string/mail" />
+                </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:paddingLeft="20dp"
-                android:paddingBottom="3dp"
-                android:text="blog" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/divider"></View>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:paddingLeft="20dp"
-                android:paddingBottom="3dp"
-                android:text="https://yike.ml" />
+                <LinearLayout
+                    android:id="@+id/about_start_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:orientation="vertical">
 
-            <View
-                android:id="@+id/view3"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?attr/divider"></View>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:gravity="center_vertical|bottom"
+                        android:paddingLeft="20dp"
+                        android:paddingBottom="3dp"
+                        android:text="@string/above_github" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:gravity="center_vertical|top"
+                        android:paddingLeft="20dp"
+                        android:paddingTop="3dp"
+                        android:text="@string/github" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/divider"></View>
+
+                <LinearLayout
+                    android:id="@+id/about_blog_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:paddingLeft="20dp"
+                        android:paddingBottom="3dp"
+                        android:text="@string/about_blog" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:paddingLeft="20dp"
+                        android:paddingBottom="3dp"
+                        android:text="@string/blog" />
+
+                    <View
+                        android:id="@+id/view3"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?attr/divider"></View>
 
 
+                </LinearLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="?attr/divider"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:text="@string/library" />
+
+                <View
+                    android:id="@+id/view4"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/divider"></View>
+
+                <ListView
+                    android:id="@+id/library_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="335dp"
+                    android:entries="@array/library_item">
+
+                </ListView>
+
+            </LinearLayout>
+        </ScrollView>
 
     </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="?attr/divider"
-            android:gravity="center_vertical"
-            android:paddingLeft="16dp"
-            tools:text="依赖" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:gravity="center_vertical|bottom"
-                android:paddingLeft="20dp"
-                android:paddingBottom="3dp"
-                android:text="xxxxx" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:gravity="center_vertical|top"
-                android:paddingLeft="20dp"
-                android:paddingTop="3dp"
-                android:text="xxxxxxxxxxxx" />
-        </LinearLayout>
-
-        <View
-            android:id="@+id/view2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?attr/divider"></View>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:paddingLeft="20dp"
-                android:paddingBottom="3dp"
-                android:text="xxxxxxx" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:paddingLeft="20dp"
-                android:paddingBottom="3dp"
-                android:text="xxxxxxxxx" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:gravity="center_vertical|bottom"
-                android:paddingLeft="20dp"
-                android:paddingBottom="3dp"
-                android:text="xxxxxxx" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:gravity="center_vertical|top"
-                android:paddingLeft="20dp"
-                android:paddingTop="3dp"
-                android:text="xxxxxxx" />
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+</LinearLayout>

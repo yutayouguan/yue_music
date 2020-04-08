@@ -1,7 +1,10 @@
 package ml.yike.yueyin.activity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -103,6 +106,7 @@ public class HomeActivity extends PlayBarBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        setStyle();
         isFirst = MyMusicUtil.getIsFirst();
         Log.d("isFirst!!!!", String.valueOf(isFirst));
         if(isFirst == true){  //app是第一次启动
@@ -143,7 +147,7 @@ public class HomeActivity extends PlayBarBaseActivity {
         navHeadImage = (ImageView)headerView.findViewById(R.id.nav_head_bg_iv);
         loadBingPic();
 
-        refreshNightModeTitle();
+        refreshNightModeTitleAndIcon();
 
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -165,7 +169,7 @@ public class HomeActivity extends PlayBarBaseActivity {
                             MyMusicUtil.setTheme(HomeActivity.this,ThemeActivity.THEME_SIZE-1);
                         }
                         recreate();  //重新加载之后才能切换成功
-                        refreshNightModeTitle();
+                        refreshNightModeTitleAndIcon();
                         break;
                     case R.id.nav_about_me:  //关于
                         Intent aboutTheme = new Intent(HomeActivity.this,AboutActivity.class);
@@ -194,7 +198,7 @@ public class HomeActivity extends PlayBarBaseActivity {
     /**
      * 滑动窗口显示的文字与icon
      */
-    private void refreshNightModeTitle(){
+    private void refreshNightModeTitleAndIcon(){
         if (MyMusicUtil.getNightMode(HomeActivity.this)){
             navView.getMenu().findItem(R.id.nav_night_mode).setTitle("日间模式");
             navView.getMenu().findItem(R.id.nav_night_mode).setIcon(R.drawable.nav_day);
@@ -318,6 +322,7 @@ public class HomeActivity extends PlayBarBaseActivity {
     /**
      * 设置双次返回
      */
+    @SuppressLint("WrongConstant")
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
@@ -377,6 +382,18 @@ public class HomeActivity extends PlayBarBaseActivity {
         });
         navHeadImage.setImageResource(R.drawable.bg_playlist);
     }
+    /**
+     * 设置顶部状态栏
+     */
+    private void setStyle() {
+        if (Build.VERSION.SDK_INT >= 21) {
+            View decorView = getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            decorView.setSystemUiVisibility(option);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
+    }
+
 }
 
 

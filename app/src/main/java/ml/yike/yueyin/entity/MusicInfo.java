@@ -1,9 +1,17 @@
 package ml.yike.yueyin.entity;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import ml.yike.yueyin.R;
+import ml.yike.yueyin.database.DBManager;
+import ml.yike.yueyin.util.Constant;
+import ml.yike.yueyin.util.MyApplication;
+import ml.yike.yueyin.util.MyMusicUtil;
 
 
 public class MusicInfo implements Comparable, Parcelable {
@@ -17,7 +25,9 @@ public class MusicInfo implements Comparable, Parcelable {
 
     private String album;
 
-    private int album_id;
+
+
+    private int albumId;
 
     private String duration;
 
@@ -25,35 +35,44 @@ public class MusicInfo implements Comparable, Parcelable {
 
     private String parentPath; //父目录路径
 
-    private Uri albumUri;              //存储音乐封面的Uri地址
+    private Uri songUri; //存储音乐的Uri地址
 
-    public Bitmap thumb; //存储封面图片
+    private Uri albumUri; //存储音乐封面的Uri地址
+
+    public Bitmap mCover; //存储封面图片
 
     private int love; //1设置我喜欢 0未设置
 
     private String firstLetter;
 
+    public int getAlbumId() {
+        return albumId;
+    }
 
+    public void setAlbumId(int albumId) {
+        this.albumId = albumId;
+    }
+    public Uri  getSongUri() {
+        return songUri;
+    }
+
+    public void setSongUri(Uri songUri) {
+        this.songUri = songUri;
+    }
+
+    public Uri getAlbumUri() {
+        return albumUri;
+    }
+
+    public void setAlbumUri(Uri albumUri) {
+        this.albumUri = albumUri;
+    }
     public String getAlbum() {
         return album;
     }
 
-    public Uri getalbumUri() {
-        return albumUri;
-    }
-
-    public int getAlbumId() {
-        return album_id;
-    }
-
     public void setAlbum(String album) {
         this.album = album;
-    }
-    public void setAlbumUri(Uri albumUri) {
-        this.albumUri = albumUri;
-    }
-    public void setAlbumId(int album_id) {
-        this.album_id = album_id;
     }
 
     public int getId() {
@@ -118,6 +137,26 @@ public class MusicInfo implements Comparable, Parcelable {
 
     public void setParentPath(String parentPath) {
         this.parentPath = parentPath;
+    }
+
+    public void setCover(String mSongPath) {
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(mSongPath);
+        byte[] bitmap = mmr.getEmbeddedPicture();
+        if (bitmap != null) {
+            mCover = BitmapFactory.decodeByteArray(bitmap, 0, bitmap.length);
+        } else {
+            mCover = BitmapFactory.decodeResource(MyApplication.getContext().getResources(),
+                    R.drawable.default_cover);
+        }
+        mmr.release();//专辑图片也是通过MediaMetadataRetriever类获取,释放类
+    }
+
+    public Bitmap getCover(String mSongPath) {
+        if (mCover == null) {
+            setCover(mSongPath);
+        }
+        return mCover;
     }
 
     /**

@@ -9,7 +9,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import ml.yike.yueyin.R;
@@ -19,7 +21,7 @@ public class AboutActivity extends BaseActivity {
     private Toolbar toolbar;
 
     private TextView versionText;
-
+    private ListView libraryItem;
     private LinearLayout startLayout, blogLayout, emailLayout;
 
 
@@ -44,7 +46,7 @@ public class AboutActivity extends BaseActivity {
         emailLayout = (LinearLayout) findViewById(R.id.about_email_ll);
         startLayout = (LinearLayout) findViewById(R.id.about_start_ll);
         blogLayout = (LinearLayout) findViewById(R.id.about_blog_ll);
-
+        libraryItem = (ListView) findViewById(R.id.library_list);
         versionText.setText(getVersion());
 
         startLayout.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +69,33 @@ public class AboutActivity extends BaseActivity {
             }
 
         });
+libraryItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+  switch (position){
+      case 0:
+          openUrl(getString(R.string.library0_url));
+          break;
+      case 1:
+          openUrl(getString(R.string.library1_url));
+          break;
+      case 2:
+          openUrl(getString(R.string.library2_url));
+          break;
+      case 3:
+          openUrl(getString(R.string.library3_url));
+          break;
+      case 4:
+          openUrl(getString(R.string.library4_url));
+          break;
+      case 5:
+          openUrl(getString(R.string.library5_url));
+          break;
+  }
+
+
+    }
+});
 
     }
 

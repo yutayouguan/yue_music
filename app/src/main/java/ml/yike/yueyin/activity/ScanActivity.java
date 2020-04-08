@@ -202,7 +202,7 @@ public class ScanActivity extends BaseActivity {
                             MediaStore.Audio.Media.TITLE,               //歌曲名称
                             MediaStore.Audio.Media.ARTIST,              //歌曲歌手
                             MediaStore.Audio.Media.ALBUM,               //歌曲的专辑名
-                            MediaStore.Audio.Media.ALBUM_ID,            //专辑ID，在后面获取封面图片时会用到
+//                            MediaStore.Audio.Media.ALBUM_ID,            //专辑ID，在后面获取封面图片时会用到
                             MediaStore.Audio.Media.DURATION,            //歌曲时长
                             MediaStore.Audio.Media.DATA};               //歌曲文件的全路径
                     Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI; //指向外部存储的uri
@@ -222,12 +222,16 @@ public class ScanActivity extends BaseActivity {
                             String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
                             //获取该音乐的歌手
                             String singer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST));
+                      /*      //获取音乐的ID
+                            String id = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+                            //通过URI和ID，组合出改音乐特有的Uri地址
+                            Uri songUri = Uri.withAppendedPath(musicUri, id);*/
                             //获取该音乐所在专辑名称
                             String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM));
-                            //获取该音乐所在专辑的id
+                           /* //获取该音乐所在专辑的id
                             int albumId = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID));
                             //再通过AlbumId组合出专辑的Uri地址
-                            Uri albumUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
+                            Uri albumUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);*/
 
                             //获取该音乐的全路径
                             String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
@@ -245,17 +249,18 @@ public class ScanActivity extends BaseActivity {
                             musicInfo.setName(name);
                             musicInfo.setSinger(singer);
                             musicInfo.setAlbum(album);
-                            musicInfo.setAlbumId(albumId);
-                            musicInfo.setAlbumUri(albumUri);
+//                            musicInfo.setSongUri(songUri);
+                      /*      musicInfo.setAlbumId(albumId);
+                            musicInfo.setAlbumUri(albumUri);*/
                             musicInfo.setPath(path);
                             musicInfo.setParentPath(parentPath);
                             musicInfo.setFirstLetter(ChineseToEnglish.StringToPinyinSpecial(name).toUpperCase().charAt(0) + "");  //设置该歌曲拼音的第一个字母
                             musicInfoList.add(musicInfo);
-
+/*
                             if (musicUri != null) {
                                 ContentResolver res = getContentResolver();
-                                musicInfo.thumb = ImageUtil.createThumbFromUir(res, albumUri);
-                            }
+                                musicInfo.mCover = ImageUtil.createAlbumImageFromUir(res, albumUri);
+                            }*/
                             Log.d(TAG, "real music found: " + path);
 
 

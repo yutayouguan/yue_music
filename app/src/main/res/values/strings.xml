@@ -9,6 +9,42 @@
     <string name="can_not_find_version_name">寻找当前版本出错</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">你好空白片段</string>
     <string name="welcome_text">一个人的时候</string>
+    <!-- 主界面 -->
+
+    <!-- 本地音乐界面 -->
+
+    <!-- 最近播放界面 -->
+
+    <!-- 我的收藏界面 -->
+
+    <!-- 播放音乐界面 -->
+
+    <!-- 关于界面 -->
+    <string name="currentVersion">当前版本1.0</string>
+    <string name="aboutTheAuthor">关于作者</string>
+    <string name="above_mail">邮箱</string>
+    <string name="mail">wmdyx@outlook.com</string>
+    <string name="above_github">Github</string>
+    <string name="github">https://github.com/yutayouguan/yue_music</string>
+    <string name="about_blog">Blog</string>
+    <string name="blog">https://yike.ml</string>
+    <string name="library">库</string>
+    <string-array name="library_item">
+        <item>库0</item>
+        <item>库1</item>
+        <item>库2</item>
+        <item>库3</item>
+        <item>库4</item>
+        <item>库5</item>
+    </string-array>
+    <string name="library0_url">https://yike.ml</string>
+    <string name="library1_url">https://yike.ml</string>
+    <string name="library2_url">https://yike.ml</string>
+    <string name="library3_url">https://yike.ml</string>
+    <string name="library4_url">https://yike.ml</string>
+    <string name="library5_url">https://yike.ml</string>
+
+    <!-- text -->
 </resources>

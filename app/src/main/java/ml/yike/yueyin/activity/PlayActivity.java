@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
@@ -15,6 +16,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -26,11 +28,14 @@ import java.util.Locale;
 import me.zhengken.lyricview.LyricView;
 import ml.yike.yueyin.R;
 import ml.yike.yueyin.database.DBManager;
+import ml.yike.yueyin.entity.MusicInfo;
 import ml.yike.yueyin.fragment.PlayBarFragment;
 import ml.yike.yueyin.receiver.PlayerManagerReceiver;
 import ml.yike.yueyin.service.MusicPlayerService;
 import ml.yike.yueyin.util.Constant;
 import ml.yike.yueyin.util.CustomAttrValueUtil;
+import ml.yike.yueyin.util.ImageUtils;
+import ml.yike.yueyin.util.MyApplication;
 import ml.yike.yueyin.util.MyMusicUtil;
 import ml.yike.yueyin.view.PlayingPopWindow;
 
@@ -61,6 +66,10 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
      * 播放模式按钮
      */
     private ImageView modeImage;
+    /**
+     * 可视化按钮
+     */
+    private ImageView vImage;
 
     /**
      * 播放时间
@@ -107,8 +116,15 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     /**
      * 多行歌词视图
      */
+
     private LyricView mLyricView;
 
+    private ImageView mCover;
+    private ImageView mCoverGauss;
+    private ImageView mCoverMirror;
+    private LinearLayout mDisplayLrc;
+
+    private boolean displayLrc = false;//默认歌词不显示
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,13 +153,17 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         singerNameText = (TextView) findViewById(R.id.tv_artist);
         seekBar = (SeekBar) findViewById(R.id.activity_play_seekbar);
         mLyricView = (LyricView) findViewById(R.id.custom_lyric_view);
-
+        mCover = (ImageView) findViewById(R.id.cover);
+        mCoverGauss = (ImageView) findViewById(R.id.background_blur);
+        mDisplayLrc = (LinearLayout) findViewById(R.id.linear_layout_music_cover);
+        mCoverMirror = (ImageView) findViewById(R.id.cover_mirror);
         backImage.setOnClickListener(this);
         playImage.setOnClickListener(this);
         menuImage.setOnClickListener(this);
         preImage.setOnClickListener(this);
         nextImage.setOnClickListener(this);
         modeImage.setOnClickListener(this);
+        mDisplayLrc.setOnClickListener(this);
 
         setSeekBarBackground();
         initPlayMode();
@@ -179,8 +199,8 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                 mProgress = progress;
-                 initTime();
+                mProgress = progress;
+                initTime();
 
             }
 
@@ -202,7 +222,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.iv_play:  //点击中间的播放/暂停
                 play();
-
                 break;
             case R.id.iv_next:
                 MyMusicUtil.playNextMusic(this);
@@ -210,14 +229,76 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.iv_prev:
                 MyMusicUtil.playPreMusic(this);
-
                 break;
             case R.id.iv_menu:
                 showPopFormBottom();
                 break;
+            case R.id.linear_layout_music_cover:
+                convertLyricAndImage();
+                break;
         }
     }
 
+    /**
+     * 点击专辑图片与歌词之间的显示
+     */
+    private void convertLyricAndImage() {
+        if (displayLrc = !displayLrc) {
+            mLyricView.setVisibility(View.VISIBLE);
+            mCover.setVisibility(View.GONE);
+            mCoverMirror.setVisibility(View.GONE);
+        } else {
+            mLyricView.setVisibility(View.GONE);
+            mCover.setVisibility(View.VISIBLE);
+            mCoverMirror.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * 初始化专辑图片
+     */
+
+    private void initAlbumImage() {
+        int musicId = MyMusicUtil.getIntSharedPreference(Constant.KEY_ID);
+        String mSongPath = dbManager.getMusicPath(musicId);
+        MusicInfo musicInfo = new MusicInfo();
+        Bitmap bitmap = musicInfo.getCover(mSongPath);
+        if (bitmap != null) {
+            updateCoverGauss(ImageUtils.fastblur(bitmap, 0.1f, 10));
+            updateCover(bitmap);
+            updateCoverMirror(ImageUtils.createReflectionBitmapForSingle(bitmap,
+                    (int) MyApplication.getContext().getResources().getDimension(R.dimen.cover_width_height),
+                    (int) MyApplication.getContext().getResources().getDimension(R.dimen.cover_mirror_height)));
+        } else {
+            updateCoverGauss(null);
+            updateCover(null);
+            updateCoverMirror(null);
+        }
+    }
+
+    public void updateCoverMirror(Bitmap bitmap) {
+        if (bitmap != null) {
+            mCoverMirror.setImageBitmap(bitmap);
+        } else {
+            mCover.setImageDrawable(getResources().getDrawable(R.drawable.default_cover_mirror));
+        }
+    }
+
+    public void updateCoverGauss(Bitmap bitmap) {
+        if (bitmap != null) {
+            mCoverGauss.setImageBitmap(bitmap);
+        } else {
+            mCoverGauss.setImageDrawable(getResources().getDrawable(R.drawable.default_cover_blur));
+        }
+    }
+
+    public void updateCover(Bitmap bitmap) {
+        if (bitmap != null) {
+            mCover.setImageBitmap(bitmap);
+        } else {
+            mCover.setImageDrawable(getResources().getDrawable(R.drawable.default_cover));
+        }
+    }
 
     /**
      * 设置播放按钮icon
@@ -268,7 +349,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     }
 
 
-
     /**
      * 设置歌曲的播放时间
      */
@@ -279,7 +359,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     }
 
     /*设置歌词显示*/
-    private void initPlayLyric() {
+    private void initLyric() {
 
         int musicId;
         musicId = MyMusicUtil.getIntSharedPreference(Constant.KEY_ID);
@@ -290,7 +370,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         File lrcFile = new File(lrcPath);
         mLyricView.setLyricFile(lrcFile);// 设置歌词文件
 //        mLyricView.setCurrentTimeMillis(current);//将歌词滚动到指定的TimeMillis
-      OnLrcViewPlayer();
+        OnLrcViewPlayer();
 
     }
 
@@ -298,6 +378,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     public void updateLrcView(int progress) {
         mLyricView.setCurrentTimeMillis(progress);
     }
+
     public void OnLrcViewPlayer() {
         mLyricView.setOnPlayerClickListener(new LyricView.OnPlayerClickListener() {
             @Override
@@ -306,6 +387,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
             }
         });
     }
+
     private String formatTime(long time) {
         return formatTime("mm:ss", time);
     }
@@ -325,15 +407,15 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         switch (playMode) {
             case Constant.PLAYMODE_SEQUENCE:
                 MyMusicUtil.setIntSharedPreference(Constant.KEY_MODE, Constant.PLAYMODE_RANDOM);
-                Toast.makeText(this,"随机播放",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "随机播放", Toast.LENGTH_SHORT).show();
                 break;
             case Constant.PLAYMODE_RANDOM:
                 MyMusicUtil.setIntSharedPreference(Constant.KEY_MODE, Constant.PLAYMODE_SINGLE_REPEAT);
-                Toast.makeText(this,"单曲循环",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "单曲循环", Toast.LENGTH_SHORT).show();
                 break;
             case Constant.PLAYMODE_SINGLE_REPEAT:
                 MyMusicUtil.setIntSharedPreference(Constant.KEY_MODE, Constant.PLAYMODE_SEQUENCE);
-                Toast.makeText(this,"列表循环",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "列表循环", Toast.LENGTH_SHORT).show();
                 break;
         }
         initPlayMode();
@@ -437,7 +519,8 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         @Override
         public void onReceive(Context context, Intent intent) {  //根据PlayBar的状态来设置图片
             initTitle(); //初始化歌曲名称与歌手
-            initPlayLyric();//初始化歌词
+            initAlbumImage();//初始化专辑图片
+            initLyric();//初始化歌词
             status = intent.getIntExtra(Constant.STATUS, 0);
             current = intent.getIntExtra(Constant.KEY_CURRENT, 0);
             duration = intent.getIntExtra(Constant.KEY_DURATION, 100);

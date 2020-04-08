@@ -5,6 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/theme_bg"
     android:fitsSystemWindows="true">
 
     <RelativeLayout
@@ -205,12 +206,13 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_alignParentBottom="true" />
+
         <LinearLayout
             android:id="@+id/home_my_list_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/home_devider_view"
             android:layout_above="@id/fragment_playbar"
+            android:layout_below="@id/home_devider_view"
             android:orientation="vertical">
 
             <LinearLayout
@@ -295,7 +297,7 @@
             android:layout_height="match_parent"
             android:layout_below="@id/home_my_list_ll"
             android:background="?attr/appbg"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </RelativeLayout>
 
