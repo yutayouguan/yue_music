@@ -177,19 +177,15 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
                 int musicId = MyMusicUtil.getIntSharedPreference(Constant.KEY_ID);
                 if (musicId == -1) {
                     /* 启动后台播放服务*/
-                    Intent intent = new Intent(MusicPlayerService.PLAYER_MANAGER_ACTION);
-                    intent.putExtra("cmd", Constant.COMMAND_STOP);
-                    sendBroadcast(intent);
+                    sendPlayBackground();
                     Toast.makeText(PlayActivity.this, "歌曲不存在", Toast.LENGTH_LONG).show();
                     return;
                 }
 
                 //发送播放请求
-                Intent intent = new Intent(MusicPlayerService.PLAYER_MANAGER_ACTION);
-                intent.putExtra("cmd", Constant.COMMAND_PROGRESS);
-                intent.putExtra("current", mProgress);
-                sendBroadcast(intent);
+                sendPlay();
             }
+
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -353,46 +349,91 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
      * 设置歌曲的播放时间
      */
     private void initTime() {
-        updateLrcView(current);
+        updateLrcView();
         curTimeText.setText(formatTime(current));
         totalTimeText.setText(formatTime(duration));
     }
 
-    /*设置歌词显示*/
+    /**
+     * 设置歌词显示
+     */
     private void initLyric() {
 
         int musicId;
         musicId = MyMusicUtil.getIntSharedPreference(Constant.KEY_ID);
         String mSongPath = dbManager.getMusicPath(musicId);
         String lrcPath = mSongPath.substring(0, mSongPath.indexOf(".")) + ".lrc";
-
 //        String lrcPath = mSongPath.substring(0, mSongPath.length() - 3) + "lrc";
         File lrcFile = new File(lrcPath);
         mLyricView.setLyricFile(lrcFile);// 设置歌词文件
-//        mLyricView.setCurrentTimeMillis(current);//将歌词滚动到指定的TimeMillis
         OnLrcViewPlayer();
 
     }
 
-    //    设置歌词进度
-    public void updateLrcView(int progress) {
-        mLyricView.setCurrentTimeMillis(progress);
+    /**
+     * 设置歌词进度
+     */
+    public void updateLrcView() {
+        mLyricView.setCurrentTimeMillis(current);
     }
 
+    /**
+     * 设置播放条进度
+     */
+    public void onProgressChanged(int progress) {
+        if (progress != 0) {
+            seekBar.setProgress(progress);
+        }
+    }
+
+    /**
+     * 指定到滑动歌词播放
+     */
     public void OnLrcViewPlayer() {
         mLyricView.setOnPlayerClickListener(new LyricView.OnPlayerClickListener() {
             @Override
             public void onPlayerClicked(long progress, String s) {
+                mProgress = (int) progress;
+                onProgressChanged(mProgress);
+                initTime();
+
+                sendPlay();
+
 
             }
+
         });
     }
 
+    /**
+     * 格式化时间
+     */
     private String formatTime(long time) {
         return formatTime("mm:ss", time);
     }
 
+    /**
+     * 发送播放请求
+     */
+    public void sendPlay() {
+        Intent intent = new Intent(MusicPlayerService.PLAYER_MANAGER_ACTION);
+        intent.putExtra("cmd", Constant.COMMAND_PROGRESS);
+        intent.putExtra("current", mProgress);
+        sendBroadcast(intent);
+    }
 
+    /**
+     * 发送后台播放请求
+     */
+    public void sendPlayBackground() {
+        Intent intent = new Intent(MusicPlayerService.PLAYER_MANAGER_ACTION);
+        intent.putExtra("cmd", Constant.COMMAND_STOP);
+        sendBroadcast(intent);
+    }
+
+    /**
+     * 格式化时间函数
+     */
     public static String formatTime(String pattern, long milli) {
         int m = (int) (milli / DateUtils.MINUTE_IN_MILLIS);
         int s = (int) ((milli / DateUtils.SECOND_IN_MILLIS) % 60);
@@ -401,7 +442,9 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         return pattern.replace("mm", mm).replace("ss", ss);
     }
 
-
+    /**
+     * 播放模式交换
+     */
     private void switchPlayMode() {
         int playMode = MyMusicUtil.getIntSharedPreference(Constant.KEY_MODE);
         switch (playMode) {
@@ -468,7 +511,9 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
-
+    /**
+     * 显示操作菜单
+     */
     public void showPopFormBottom() {
         PlayingPopWindow playingPopWindow = new PlayingPopWindow(PlayActivity.this);
         playingPopWindow.showAtLocation(findViewById(R.id.activity_play), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
