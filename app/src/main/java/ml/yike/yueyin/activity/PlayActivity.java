@@ -196,7 +196,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
                 mProgress = progress;
-                initTime();
+                initTimeAndLyricDisplay();
 
             }
 
@@ -348,7 +348,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     /**
      * 设置歌曲的播放时间
      */
-    private void initTime() {
+    private void initTimeAndLyricDisplay() {
         updateLrcView();
         curTimeText.setText(formatTime(current));
         totalTimeText.setText(formatTime(duration));
@@ -395,7 +395,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
             public void onPlayerClicked(long progress, String s) {
                 mProgress = (int) progress;
                 onProgressChanged(mProgress);
-                initTime();
+                initTimeAndLyricDisplay();
 
                 sendPlay();
 
