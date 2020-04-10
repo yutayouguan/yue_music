@@ -12,12 +12,14 @@ import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.widget.Toast;
 
+import ml.yike.yueyin.activity.PlayActivity;
 import ml.yike.yueyin.activity.ThemeActivity;
 import ml.yike.yueyin.database.DBManager;
 import ml.yike.yueyin.entity.AlbumInfo;
 import ml.yike.yueyin.entity.FolderInfo;
 import ml.yike.yueyin.entity.MusicInfo;
 import ml.yike.yueyin.entity.SingerInfo;
+import ml.yike.yueyin.receiver.PlayerManagerReceiver;
 import ml.yike.yueyin.service.MusicPlayerService;
 
 import java.io.File;
@@ -115,7 +117,6 @@ public class MyMusicUtil {
         intent.putExtra(Constant.KEY_PATH, path);
         context.sendBroadcast(intent);
     }
-
 
     /**
      * 播放前一首歌曲

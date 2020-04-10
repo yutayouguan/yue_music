@@ -174,16 +174,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {  //滑动条进行改变
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                int musicId = MyMusicUtil.getIntSharedPreference(Constant.KEY_ID);
-                if (musicId == -1) {
-                    /* 启动后台播放服务*/
-                    sendPlayBackground();
-                    Toast.makeText(PlayActivity.this, "歌曲不存在", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                //发送播放请求
-                sendPlay();
+                changeNow();
             }
 
 
@@ -221,7 +212,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.iv_next:
                 MyMusicUtil.playNextMusic(this);
-
                 break;
             case R.id.iv_prev:
                 MyMusicUtil.playPreMusic(this);
@@ -396,10 +386,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
                 mProgress = (int) progress;
                 onProgressChanged(mProgress);
                 initTimeAndLyricDisplay();
-
-                sendPlay();
-
-
+                changeNow();
             }
 
         });
@@ -413,9 +400,23 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     }
 
     /**
-     * 发送播放请求
+     * 改变歌曲的进度
      */
-    public void sendPlay() {
+    public void changeNow() {
+        int musicId = MyMusicUtil.getIntSharedPreference(Constant.KEY_ID);
+        if (musicId == -1) {
+            sendStop();
+            Toast.makeText(PlayActivity.this, "歌曲不存在", Toast.LENGTH_LONG).show();
+            return;
+        }
+//          发送更改播放进度请求
+        changeProgress();
+    }
+
+    /**
+     * 发送更改播放进度请求
+     */
+    public void changeProgress() {
         Intent intent = new Intent(MusicPlayerService.PLAYER_MANAGER_ACTION);
         intent.putExtra("cmd", Constant.COMMAND_PROGRESS);
         intent.putExtra("current", mProgress);
@@ -423,9 +424,9 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     }
 
     /**
-     * 发送后台播放请求
+     * 发送停止播放请求
      */
-    public void sendPlayBackground() {
+    public void sendStop() {
         Intent intent = new Intent(MusicPlayerService.PLAYER_MANAGER_ACTION);
         intent.putExtra("cmd", Constant.COMMAND_STOP);
         sendBroadcast(intent);
@@ -497,6 +498,8 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
             Intent intent = new Intent(MusicPlayerService.PLAYER_MANAGER_ACTION);
             intent.putExtra(Constant.COMMAND, Constant.COMMAND_PLAY);
             sendBroadcast(intent);
+
+
         } else if (PlayerManagerReceiver.status == Constant.STATUS_PLAY) {  //播放-暂停
             Intent intent = new Intent(MusicPlayerService.PLAYER_MANAGER_ACTION);
             intent.putExtra(Constant.COMMAND, Constant.COMMAND_PAUSE);
@@ -508,7 +511,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
             intent.putExtra(Constant.KEY_PATH, path);
             sendBroadcast(intent);
         }
-
     }
 
     /**

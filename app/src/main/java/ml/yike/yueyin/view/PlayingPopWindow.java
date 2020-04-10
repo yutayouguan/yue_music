@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -42,6 +43,11 @@ public class PlayingPopWindow extends PopupWindow{
 
     private DBManager dbManager;
 
+    private RelativeLayout playModeLayout;
+
+    private ImageView playModeImage;
+
+    private TextView playModeText;
 
     public PlayingPopWindow(Activity activity) {
         super(activity);
@@ -91,8 +97,39 @@ public class PlayingPopWindow extends PopupWindow{
         recyclerView.setAdapter(playingPopWindowAdapter);
 
         closeLayout = (RelativeLayout) view.findViewById(R.id.playing_list_close_rv);
+        playModeLayout = (RelativeLayout) view.findViewById(R.id.playing_list_playmode_rl);
+        playModeImage = (ImageView) view.findViewById(R.id.playing_list_playmode_iv);
+        playModeText = (TextView) view.findViewById(R.id.playing_list_playmode_tv);
         countText = (TextView)view.findViewById(R.id.playing_list_count_tv);
-        countText.setText("("+musicInfoList.size()+")");
+
+        initDefaultPlayModeView();
+
+        //  顺序 --> 随机-- > 单曲
+        playModeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int playMode = MyMusicUtil.getIntSharedPreference(Constant.KEY_MODE);
+                switch (playMode) {
+                    case Constant.PLAYMODE_SEQUENCE:
+                        playModeText.setText(Constant.PLAYMODE_RANDOM_TEXT);
+                        countText.setText("("+musicInfoList.size()+")");
+                        MyMusicUtil.setIntSharedPreference(Constant.KEY_MODE, Constant.PLAYMODE_RANDOM);
+                        break;
+                    case Constant.PLAYMODE_RANDOM:
+                        countText.setText("");
+                        playModeText.setText(Constant.PLAYMODE_SINGLE_REPEAT_TEXT);
+                        MyMusicUtil.setIntSharedPreference(Constant.KEY_MODE, Constant.PLAYMODE_SINGLE_REPEAT);
+                        break;
+                    case Constant.PLAYMODE_SINGLE_REPEAT:
+
+                        countText.setText("("+musicInfoList.size()+")");
+                        playModeText.setText(Constant.PLAYMODE_SEQUENCE_TEXT);
+                        MyMusicUtil.setIntSharedPreference(Constant.KEY_MODE, Constant.PLAYMODE_SEQUENCE);
+                        break;
+                }
+                initPlayMode();
+            }
+        });
 
         closeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +138,34 @@ public class PlayingPopWindow extends PopupWindow{
             }
         });
 
+}
+
+    private void initDefaultPlayModeView() {
+        int playMode = MyMusicUtil.getIntSharedPreference(Constant.KEY_MODE);
+        switch (playMode) {
+            case Constant.PLAYMODE_SEQUENCE:
+                playModeText.setText(Constant.PLAYMODE_SEQUENCE_TEXT);
+                countText.setText("("+musicInfoList.size()+")");
+                break;
+            case Constant.PLAYMODE_RANDOM:
+                playModeText.setText(Constant.PLAYMODE_RANDOM_TEXT);
+                countText.setText("("+musicInfoList.size()+")");
+                break;
+            case Constant.PLAYMODE_SINGLE_REPEAT:
+                playModeText.setText(Constant.PLAYMODE_SINGLE_REPEAT_TEXT);
+                countText.setText("");
+                break;
+        }
+        initPlayMode();
+    }
+
+
+    private void initPlayMode() {
+        int playMode = MyMusicUtil.getIntSharedPreference(Constant.KEY_MODE);
+        if (playMode == -1) {
+            playMode = 0;
+        }
+        playModeImage.setImageLevel(playMode);
     }
 
 

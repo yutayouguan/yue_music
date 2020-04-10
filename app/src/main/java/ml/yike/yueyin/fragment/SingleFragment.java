@@ -141,9 +141,9 @@ public class SingleFragment extends Fragment {
             }
         });
 
-        playModeLayout = (RelativeLayout)view.findViewById(R.id.local_music_playmode_rl);
-        playModeImage = (ImageView)view.findViewById(R.id.local_music_playmode_iv);
-        playModeText = (TextView)view.findViewById(R.id.local_music_playmode_tv);
+        playModeLayout = (RelativeLayout)view.findViewById(R.id.playing_list_playmode_rl);
+        playModeImage = (ImageView)view.findViewById(R.id.playing_list_playmode_iv);
+        playModeText = (TextView)view.findViewById(R.id.playing_list_playmode_tv);
         initDefaultPlayModeView();
 
         //顺序 --> 随机-- > 单曲

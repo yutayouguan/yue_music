@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <RelativeLayout
-        android:id="@+id/local_music_playmode_rl"
+        android:id="@+id/playing_list_playmode_rl"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@id/local_viewPager"
@@ -12,17 +12,17 @@
         android:clickable="true"
         android:background="?attr/appbg">
         <ImageView
-            android:id="@+id/local_music_playmode_iv"
+            android:id="@+id/playing_list_playmode_iv"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:padding="12dp"
             android:src="@drawable/play_mode_level_list"/>
         <TextView
-            android:id="@+id/local_music_playmode_tv"
+            android:id="@+id/playing_list_playmode_tv"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@id/local_music_playmode_iv"
+            android:layout_toRightOf="@id/playing_list_playmode_iv"
             android:gravity="center_vertical"
             android:textSize="15sp"
             android:text="顺序播放"/>
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:layout_below="@id/local_music_playmode_rl"/>
+        android:layout_below="@id/playing_list_playmode_rl"/>
     <ml.yike.yueyin.view.SideBar
         android:id="@+id/local_music_siderbar"
         android:layout_width="200dp"
@@ -40,7 +40,7 @@
         android:layout_alignParentRight="true"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:layout_below="@id/local_music_playmode_rl"/>
+        android:layout_below="@id/playing_list_playmode_rl"/>
     <TextView
         android:id="@+id/local_music_siderbar_pre_tv"
         android:layout_width="80dp"
