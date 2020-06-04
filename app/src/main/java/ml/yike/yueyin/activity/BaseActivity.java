@@ -1,7 +1,7 @@
 package ml.yike.yueyin.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import ml.yike.yueyin.R;
 import ml.yike.yueyin.util.MyMusicUtil;

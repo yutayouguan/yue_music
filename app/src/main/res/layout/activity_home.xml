@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:background="?attr/appbg">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/home_activity_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -301,7 +301,7 @@
 
     </RelativeLayout>
 
-    <android.support.design.widget.NavigationView
+    <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -309,4 +309,4 @@
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu" />
 
-</android.support.v4.widget.DrawerLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

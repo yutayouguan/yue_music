@@ -3,7 +3,6 @@ package ml.yike.yueyin.view;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.Point;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,15 +16,17 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
-import ml.yike.yueyin.R;
-import ml.yike.yueyin.database.DBManager;
-import ml.yike.yueyin.entity.MusicInfo;
-import ml.yike.yueyin.entity.PlayListInfo;
+import androidx.appcompat.app.AlertDialog;
+
 import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ml.yike.yueyin.R;
+import ml.yike.yueyin.database.DBManager;
+import ml.yike.yueyin.entity.MusicInfo;
+import ml.yike.yueyin.entity.PlayListInfo;
 
 
 

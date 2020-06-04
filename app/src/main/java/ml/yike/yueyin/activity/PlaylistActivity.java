@@ -5,11 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -20,9 +15,17 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
+import com.bumptech.glide.Glide;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
+
+import java.util.List;
+
 import ml.yike.yueyin.R;
 import ml.yike.yueyin.adapter.PlaylistAdapter;
 import ml.yike.yueyin.database.DBManager;
@@ -31,12 +34,8 @@ import ml.yike.yueyin.entity.PlayListInfo;
 import ml.yike.yueyin.receiver.PlayerManagerReceiver;
 import ml.yike.yueyin.service.MusicPlayerService;
 import ml.yike.yueyin.util.Constant;
-import ml.yike.yueyin.util.MyApplication;
 import ml.yike.yueyin.util.MyMusicUtil;
 import ml.yike.yueyin.view.MusicPopMenuWindow;
-import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
-
-import java.util.List;
 
 
 public class PlaylistActivity extends PlayBarBaseActivity {

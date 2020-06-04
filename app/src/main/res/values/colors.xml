@@ -24,7 +24,7 @@
     <color name="grey800">#ff424242</color>
     <color name="grey900">#ff282828</color>
     <color name="bg_album">#ECECEC</color>
-
+    <color name="av_color_bg">#8f367c</color>
     <!--日间模式下 通用背景色-->
     <color name="common_bg">#FFFFFF</color>
     <!--日间模式下 触摸背景色-->

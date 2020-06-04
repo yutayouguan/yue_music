@@ -7,7 +7,7 @@
     <string name="about">关于</string>
     <string name="version_name">当前版本 </string>
     <string name="can_not_find_version_name">寻找当前版本出错</string>
-
+<string name="search">搜索</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">你好空白片段</string>
     <string name="welcome_text">一个人的时候</string>

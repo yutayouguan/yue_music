@@ -11,9 +11,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -142,7 +144,8 @@ public class ScanActivity extends BaseActivity {
 
 
         handler = new Handler() {
-            public void handleMessage(Message msg) {
+            @SuppressLint("SetTextI18n")
+            public void handleMessage(@NotNull Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case Constant.SCAN_NO_MUSIC:  //本地没有歌曲
@@ -186,8 +189,6 @@ public class ScanActivity extends BaseActivity {
         });
         radarView.setVisibility(View.INVISIBLE);
     }
-
-
     /**
      * 开始扫描音乐
      */
@@ -201,17 +202,17 @@ public class ScanActivity extends BaseActivity {
                     String[] muiscInfoArray = new String[]{
                             MediaStore.Audio.Media.TITLE,               //歌曲名称
                             MediaStore.Audio.Media.ARTIST,              //歌曲歌手
+                            MediaStore.Audio.Media.ALBUM_ID,            //专辑ID，在后面获取封面图片时会用到
                             MediaStore.Audio.Media.ALBUM,               //歌曲的专辑名
-//                            MediaStore.Audio.Media.ALBUM_ID,            //专辑ID，在后面获取封面图片时会用到
                             MediaStore.Audio.Media.DURATION,            //歌曲时长
                             MediaStore.Audio.Media.DATA};               //歌曲文件的全路径
-                    Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI; //指向外部存储的uri
+                    Uri musicUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI; //指向外部存储的ur提供Provider
 //                  String where = MediaStore.Audio.Media.DATA + " like \"%"+"/music"+"%\"";  //扫描包含music关键字的路径
 //                  String where = MediaStore.Audio.Media.DATA + " like \"%"+getString(R.string.search_path)+"%\"";
                     String where = null; //默认全盘扫描
                     String [] keywords = null;
                     String sortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;  //查询结果的排序方式，这里选择默认排序方式
-                    ContentResolver resolver = getContentResolver();
+                    ContentResolver resolver = getContentResolver(); //那么我们就需要构建一个Resolver（内容解析器）来读取音频的内容。
                     Cursor cursor = resolver.query(musicUri,
                             muiscInfoArray, where, keywords, sortOrder);  //内容提供器获取歌曲信息
 
@@ -222,17 +223,16 @@ public class ScanActivity extends BaseActivity {
                             String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.TITLE));
                             //获取该音乐的歌手
                             String singer = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST));
-                      /*      //获取音乐的ID
-                            String id = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+                            //获取音乐的ID
+                           /* String id = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
                             //通过URI和ID，组合出改音乐特有的Uri地址
                             Uri songUri = Uri.withAppendedPath(musicUri, id);*/
                             //获取该音乐所在专辑名称
                             String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM));
-                           /* //获取该音乐所在专辑的id
+                            //获取该音乐所在专辑的id
                             int albumId = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID));
                             //再通过AlbumId组合出专辑的Uri地址
-                            Uri albumUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);*/
-
+                            Uri albumUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
                             //获取该音乐的全路径
                             String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA));
                             //获取音乐的时长，单位是毫秒
@@ -250,17 +250,17 @@ public class ScanActivity extends BaseActivity {
                             musicInfo.setSinger(singer);
                             musicInfo.setAlbum(album);
 //                            musicInfo.setSongUri(songUri);
-                      /*      musicInfo.setAlbumId(albumId);
-                            musicInfo.setAlbumUri(albumUri);*/
+                            musicInfo.setAlbumId(albumId);
+                            musicInfo.setAlbumUri(albumUri);
                             musicInfo.setPath(path);
                             musicInfo.setParentPath(parentPath);
                             musicInfo.setFirstLetter(ChineseToEnglish.StringToPinyinSpecial(name).toUpperCase().charAt(0) + "");  //设置该歌曲拼音的第一个字母
                             musicInfoList.add(musicInfo);
 /*
-                            if (musicUri != null) {
+
                                 ContentResolver res = getContentResolver();
                                 musicInfo.mCover = ImageUtil.createAlbumImageFromUir(res, albumUri);
-                            }*/
+                            */
                             Log.d(TAG, "real music found: " + path);
 
 
@@ -282,6 +282,7 @@ public class ScanActivity extends BaseActivity {
                         currentMusicPath = dbManager.getMusicPath(currentMusicId);
 
                         Collections.sort(musicInfoList);  //将所有歌曲按照字母进行排序
+
                         dbManager.updateAllMusic(musicInfoList);
 
                         msg = new Message();
@@ -305,8 +306,6 @@ public class ScanActivity extends BaseActivity {
             }
         }.start();
     }
-
-
     /**
      * 初始化正在播放的音乐
      */

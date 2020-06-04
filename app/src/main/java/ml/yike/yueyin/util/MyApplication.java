@@ -3,7 +3,7 @@ package ml.yike.yueyin.util;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import ml.yike.yueyin.service.MusicPlayerService;
 

@@ -1,18 +1,26 @@
 package ml.yike.yueyin.util;
 
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.media.RingtoneManager;
+import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.widget.Toast;
 
-import ml.yike.yueyin.activity.PlayActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ml.yike.yueyin.activity.ThemeActivity;
 import ml.yike.yueyin.database.DBManager;
 import ml.yike.yueyin.entity.AlbumInfo;
@@ -22,17 +30,16 @@ import ml.yike.yueyin.entity.SingerInfo;
 import ml.yike.yueyin.receiver.PlayerManagerReceiver;
 import ml.yike.yueyin.service.MusicPlayerService;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static android.media.audiofx.Visualizer.getMaxCaptureRate;
 
 
 public class MyMusicUtil {
 
     private static final String TAG = MyMusicUtil.class.getName();
-
+    private static Visualizer mVisualizer;
+    private  MediaPlayer mPlayer;
+    private  boolean mVisualizerEnable = false;
+    private static PlayerManagerReceiver playerManagerReceiver;
 
     /**
      * 获取当前播放的列表
@@ -83,6 +90,73 @@ public class MyMusicUtil {
         return musicInfoList;
     }
 
+
+
+    public interface onFftDataCaptureListener {
+        void onFftCapture(float[] fft);
+    }
+
+    /**
+     * 设置频谱回调
+     *
+     * @param size 传回的数组大小
+     * @param max  整体频率的大小，该值越小，传回数组的平均值越大，在 50 时效果较好。
+     * @param l    回调
+     */
+    public  void setupVisualizer(final int size, final int max, final onFftDataCaptureListener l) {
+        // 频率分之一是时间  赫兹=1/秒
+        mPlayer=new MediaPlayer();
+//        mPlayer=playerManagerReceiver.getMediaPlayer();
+
+        mVisualizer = new Visualizer(mPlayer.getAudioSessionId());
+        mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[0]); //0为128；1为1024
+        mVisualizer.setDataCaptureListener(new Visualizer.OnDataCaptureListener() {
+
+            @Override
+            public void onWaveFormDataCapture(Visualizer visualizer, byte[] waveform, int samplingRate) {
+                //快速傅里叶变换有关的数据
+
+            }
+
+            @Override
+            public void onFftDataCapture(Visualizer visualizer, byte[] fft, int samplingRate) {
+                //波形数据
+
+                byte[] model = new byte[fft.length / 2 + 1];
+                model[0] = (byte) Math.abs(fft[1]);
+                int j = 1;
+
+                for (int i = 2; i < size * 2; ) {
+
+                    model[j] = (byte) Math.hypot(fft[i], fft[i + 1]);
+                    i += 2;
+                    j++;
+                }
+
+                float[] data = new float[size];
+                if (max != 0) {
+                    for (int i = 0; i < size; i++) {
+                        data[i] = (float) model[i] / max;
+                        data[i] = data[i] < 0 ? 0 : data[i];
+                    }
+                } else {
+                    Arrays.fill(data, 0);
+                }
+
+                l.onFftCapture(data);
+
+            } // getMaxCaptureRate() -> 20000 最快
+        }, getMaxCaptureRate() / 8, false, true);
+
+        mVisualizer.setEnabled(false); //这个设置必须在参数设置之后，表示开始采样
+    }
+
+    public void setVisualizerEnable(boolean visualizerEnable) {
+        this.mVisualizerEnable = visualizerEnable;
+        if (mPlayer.isPlaying()) {
+            mVisualizer.setEnabled(mVisualizerEnable);
+        }
+    }
 
     /**
      * 播放下一首音乐

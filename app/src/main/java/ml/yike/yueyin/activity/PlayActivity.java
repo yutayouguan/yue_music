@@ -4,13 +4,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ScaleDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.format.DateUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -28,15 +32,16 @@ import java.util.Locale;
 import me.zhengken.lyricview.LyricView;
 import ml.yike.yueyin.R;
 import ml.yike.yueyin.database.DBManager;
-import ml.yike.yueyin.entity.MusicInfo;
 import ml.yike.yueyin.fragment.PlayBarFragment;
 import ml.yike.yueyin.receiver.PlayerManagerReceiver;
 import ml.yike.yueyin.service.MusicPlayerService;
+import ml.yike.yueyin.util.ColorUtils;
 import ml.yike.yueyin.util.Constant;
 import ml.yike.yueyin.util.CustomAttrValueUtil;
 import ml.yike.yueyin.util.ImageUtils;
 import ml.yike.yueyin.util.MyApplication;
 import ml.yike.yueyin.util.MyMusicUtil;
+import ml.yike.yueyin.view.BarWavesView;
 import ml.yike.yueyin.view.PlayingPopWindow;
 
 public class PlayActivity extends BaseActivity implements View.OnClickListener {
@@ -70,6 +75,10 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
      * 可视化按钮
      */
     private ImageView vImage;
+    /**
+     * 存储专辑图片
+     */
+    private static Bitmap bitmap;
 
     /**
      * 播放时间
@@ -97,6 +106,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
      */
     private PlayReceiver mReceiver;
 
+
     /**
      * 歌曲进度条
      */
@@ -123,7 +133,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
     private ImageView mCoverGauss;
     private ImageView mCoverMirror;
     private LinearLayout mDisplayLrc;
-
+    private BarWavesView barWavesView, barWavesView_1;
     private boolean displayLrc = false;//默认歌词不显示
 
     @Override
@@ -135,7 +145,6 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         initView();
         register();
     }
-
 
     /**
      * 初始化控件
@@ -157,6 +166,8 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         mCoverGauss = (ImageView) findViewById(R.id.background_blur);
         mDisplayLrc = (LinearLayout) findViewById(R.id.linear_layout_music_cover);
         mCoverMirror = (ImageView) findViewById(R.id.cover_mirror);
+        barWavesView = (BarWavesView) findViewById(R.id.BarWavesView);
+        barWavesView_1 = (BarWavesView) findViewById(R.id.BarWavesView1);
         backImage.setOnClickListener(this);
         playImage.setOnClickListener(this);
         menuImage.setOnClickListener(this);
@@ -165,11 +176,12 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         modeImage.setOnClickListener(this);
         mDisplayLrc.setOnClickListener(this);
 
+
         setSeekBarBackground();
         initPlayMode();
         initTitle();
         initPlayImage();
-
+        testSetColor();
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {  //滑动条进行改变
             @Override
@@ -196,6 +208,48 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
 
     }
 
+    private void initVisual() {
+        MyMusicUtil myMusicUtil = new MyMusicUtil();
+        myMusicUtil.setupVisualizer(barWavesView.getWaveNumber(), 50, new MyMusicUtil.onFftDataCaptureListener() {
+            @Override
+            public void onFftCapture(float[] fft) {
+                barWavesView.setWaveHeight(fft);
+                barWavesView_1.setWaveHeight(fft);
+//                testSetColor();
+            }
+        });
+        myMusicUtil.setVisualizerEnable(true);
+    }
+
+    private void testSetColor() {
+        barWavesView.setBarColor(ColorUtils.getRandomColor()); //获得一个随机颜色
+        barWavesView.setWaveColor(ColorUtils.getRandomColor());
+        barWavesView_1.setBarColor(ColorUtils.getRandomColor()); //获得一个随机颜色
+        barWavesView_1.setWaveColor(ColorUtils.getRandomColor());
+        int[][] cs = new int[barWavesView.getWaveNumber()][2];
+        int[][] cs1 = new int[barWavesView_1.getWaveNumber()][2];
+        for (int i = 0; i < cs.length; i++) {
+            // 控件允许给每一条波浪条单独设置颜色，这两个颜色将以纵向渐变的形式被绘制
+            cs[i][0] = ColorUtils.getRandomColor();
+            cs[i][1] = ColorUtils.getRandomColor();
+        }
+        for (int i = 0; i < cs1.length; i++) {
+            // 控件允许给每一条波浪条单独设置颜色，这两个颜色将以纵向渐变的形式被绘制
+            cs1[i][0] = ColorUtils.getRandomColor();
+            cs1[i][1] = ColorUtils.getRandomColor();
+        }
+        barWavesView.setWaveColor(cs);
+        barWavesView_1.setWaveColor(cs1);
+
+    }
+
+    public static Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    private void setBitMap(Bitmap bitmap) {
+        this.bitmap=bitmap;
+    }
 
     @Override
     public void onClick(View v) {
@@ -209,6 +263,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.iv_play:  //点击中间的播放/暂停
                 play();
+
                 break;
             case R.id.iv_next:
                 MyMusicUtil.playNextMusic(this);
@@ -222,6 +277,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
             case R.id.linear_layout_music_cover:
                 convertLyricAndImage();
                 break;
+
         }
     }
 
@@ -229,10 +285,11 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
      * 点击专辑图片与歌词之间的显示
      */
     private void convertLyricAndImage() {
-        if (displayLrc = !displayLrc) {
+        if (!displayLrc) {
             mLyricView.setVisibility(View.VISIBLE);
             mCover.setVisibility(View.GONE);
             mCoverMirror.setVisibility(View.GONE);
+            displayLrc =true;
         } else {
             mLyricView.setVisibility(View.GONE);
             mCover.setVisibility(View.VISIBLE);
@@ -240,15 +297,32 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    private String getAlbumArtPicPath(int albumId) {
+        String[] projection = {MediaStore.Audio.Albums.ALBUM_ART};
+        String imagePath = null;
+        Cursor cur = getContentResolver().query(
+                Uri.parse("content://media" + MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI.getPath() + "/" + albumId),
+                projection,
+                null,
+                null,
+                null);
+        if (cur.getCount() > 0 && cur.getColumnCount() > 0) {
+            cur.moveToNext();
+            imagePath = cur.getString(0);
+        }
+        cur.close();
+        return imagePath;
+    }
     /**
      * 初始化专辑图片
      */
 
     private void initAlbumImage() {
         int musicId = MyMusicUtil.getIntSharedPreference(Constant.KEY_ID);
-        String mSongPath = dbManager.getMusicPath(musicId);
-        MusicInfo musicInfo = new MusicInfo();
-        Bitmap bitmap = musicInfo.getCover(mSongPath);
+        int albumId = dbManager.getMusicAlbumId(musicId);
+        String ArtPicPath=  getAlbumArtPicPath(albumId);
+        bitmap =   BitmapFactory.decodeFile(ArtPicPath);
+        setBitMap(bitmap);
         if (bitmap != null) {
             updateCoverGauss(ImageUtils.fastblur(bitmap, 0.1f, 10));
             updateCover(bitmap);
@@ -262,11 +336,12 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+
     public void updateCoverMirror(Bitmap bitmap) {
         if (bitmap != null) {
             mCoverMirror.setImageBitmap(bitmap);
         } else {
-            mCover.setImageDrawable(getResources().getDrawable(R.drawable.default_cover_mirror));
+            mCoverMirror.setImageDrawable(getResources().getDrawable(R.drawable.default_cover_mirror));
         }
     }
 
@@ -495,6 +570,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
             return;
         }
         if (PlayerManagerReceiver.status == Constant.STATUS_PAUSE) {  //暂停-播放
+
             Intent intent = new Intent(MusicPlayerService.PLAYER_MANAGER_ACTION);
             intent.putExtra(Constant.COMMAND, Constant.COMMAND_PLAY);
             sendBroadcast(intent);
@@ -568,6 +644,7 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener {
             initTitle(); //初始化歌曲名称与歌手
             initAlbumImage();//初始化专辑图片
             initLyric();//初始化歌词
+            initVisual();//初始化可视化
             status = intent.getIntExtra(Constant.STATUS, 0);
             current = intent.getIntExtra(Constant.KEY_CURRENT, 0);
             duration = intent.getIntExtra(Constant.KEY_DURATION, 100);

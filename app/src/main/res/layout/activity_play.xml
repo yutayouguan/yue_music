@@ -29,6 +29,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/mask_image_view" />
+    <!--
+        <com.cleveroad.audiovisualization.GLAudioVisualizationView
+            android:id="@+id/visualizer_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:av_bubble_size="@dimen/bubble_size"
+            app:av_footer_height="@dimen/footer_height"
+            app:av_layers_count="4"
+            app:av_randomize_bubble_size="true"
+            app:av_wave_height="@dimen/wave_height"
+            app:av_waves_count="7"
+            app:av_backgroundColor="@color/av_color_bg"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -95,37 +107,82 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linear_layout_music_cover"
+        <FrameLayout
+            android:id="@+id/layout_music_cover"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_above="@+id/relative_layout_seek_bar_wrapper"
-            android:layout_below="@id/linear_layout_title_wrapper"
-            android:layout_weight="4"
-            android:clickable="true"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_weight="4">
 
-            <me.zhengken.lyricview.LyricView
-                android:id="@+id/custom_lyric_view"
+            <ml.yike.yueyin.view.BarWavesView
+                android:id="@+id/BarWavesView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                app:textSize="@dimen/lyric_font_size" />
+                android:layout_gravity="right"
+                android:rotation="90"
+                app:barColor="#d1d1d1"
+                app:barHeight="1dp"
+                app:fallAutomatically="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:waveColor="#FFFFFF"
+                app:waveInterval="5dp"
+                app:waveMinHeight="60dp"
+                app:waveNumber="100"
+                app:waveRange="30dp"
+                app:waveWidth="2dp" />
 
-            <ImageView
-                android:id="@+id/cover"
-                android:layout_width="@dimen/cover_width_height"
-                android:layout_height="@dimen/cover_width_height"
-                android:src="@drawable/default_cover" />
+            <ml.yike.yueyin.view.BarWavesView
+                android:id="@+id/BarWavesView1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:rotation="-90"
+                app:barColor="#d1d1d1"
+                app:barHeight="1dp"
+                app:fallAutomatically="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:waveColor="#FFFFFF"
+                app:waveInterval="5dp"
+                app:waveMinHeight="60dp"
+                app:waveNumber="100"
+                app:waveRange="30dp"
+                app:waveWidth="2dp" />
 
-            <ImageView
-                android:id="@+id/cover_mirror"
-                android:layout_width="@dimen/cover_width_height"
-                android:layout_height="@dimen/cover_mirror_height"
-                android:layout_marginTop="@dimen/cover_mirror_margin_top"
-                android:src="@drawable/default_cover_mirror" />
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_layout_music_cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <me.zhengken.lyricview.LyricView
+                    android:id="@+id/custom_lyric_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    app:textSize="@dimen/lyric_font_size" />
+
+                <ImageView
+                    android:id="@+id/cover"
+                    android:layout_width="@dimen/cover_width_height"
+                    android:layout_height="@dimen/cover_width_height"
+                    android:src="@drawable/default_cover" />
+
+                <ImageView
+                    android:id="@+id/cover_mirror"
+                    android:layout_width="@dimen/cover_width_height"
+                    android:layout_height="@dimen/cover_mirror_height"
+                    android:layout_marginTop="@dimen/cover_mirror_margin_top"
+                    android:src="@drawable/default_cover_mirror" />
+
+            </LinearLayout>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

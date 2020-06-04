@@ -7,8 +7,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -29,7 +29,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 
-public class WelcomeActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity {
 
     /**
      * 获取权限的标识
@@ -48,17 +48,14 @@ public class WelcomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         welcomeImage = (ImageView) findViewById(R.id.welcome_bing_iv);
-        loadBingPic();
         setStyle();
-
+        loadBingPic();
         sharepreferences = this.getSharedPreferences("check", MODE_PRIVATE);
         editor = sharepreferences.edit();
         initPermission();
 
     }
-
-
-    private void loadBingPic() {
+    private void loadBingPic(){
         HttpUtil.sendOkHttpRequest(HttpUtil.requestBingPic, new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -71,20 +68,17 @@ public class WelcomeActivity extends BaseActivity {
                             Glide.with(MyApplication.getContext()).load(bingPic).into(welcomeImage);
                         }
                     });
-                } catch (Exception e) {
+                }catch (Exception e){
                     e.printStackTrace();
-                    welcomeImage.setImageResource(R.drawable.welcome);
                 }
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                welcomeImage.setImageResource(R.drawable.welcome);
             }
         });
     }
-
     /**
      * 设置定时
      */
@@ -115,8 +109,8 @@ public class WelcomeActivity extends BaseActivity {
             checkSkip();
             return;
         }
-        if (ContextCompat.checkSelfPermission(WelcomeActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(WelcomeActivity.this,
+        if (ContextCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(SplashActivity.this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     PERMISSON_REQUESTCODE);
         } else {

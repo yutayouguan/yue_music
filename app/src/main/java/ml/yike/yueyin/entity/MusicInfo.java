@@ -1,11 +1,14 @@
 package ml.yike.yueyin.entity;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.MediaStore;
 
 import ml.yike.yueyin.R;
 import ml.yike.yueyin.database.DBManager;
@@ -25,17 +28,18 @@ public class MusicInfo implements Comparable, Parcelable {
 
     private String album;
 
-
+    private Context mContext;
 
     private int albumId;
 
     private String duration;
 
+
     private String path;
 
     private String parentPath; //父目录路径
 
-    private Uri songUri; //存储音乐的Uri地址
+/*    private Uri songUri; //存储音乐的Uri地址*/
 
     private Uri albumUri; //存储音乐封面的Uri地址
 
@@ -52,14 +56,14 @@ public class MusicInfo implements Comparable, Parcelable {
     public void setAlbumId(int albumId) {
         this.albumId = albumId;
     }
-    public Uri  getSongUri() {
+  /*  public Uri  getSongUri() {
         return songUri;
     }
 
     public void setSongUri(Uri songUri) {
         this.songUri = songUri;
     }
-
+*/
     public Uri getAlbumUri() {
         return albumUri;
     }
@@ -67,6 +71,8 @@ public class MusicInfo implements Comparable, Parcelable {
     public void setAlbumUri(Uri albumUri) {
         this.albumUri = albumUri;
     }
+
+
     public String getAlbum() {
         return album;
     }
@@ -139,7 +145,9 @@ public class MusicInfo implements Comparable, Parcelable {
         this.parentPath = parentPath;
     }
 
-    public void setCover(String mSongPath) {
+
+
+   /* public void setCover(String mSongPath) {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(mSongPath);
         byte[] bitmap = mmr.getEmbeddedPicture();
@@ -158,7 +166,7 @@ public class MusicInfo implements Comparable, Parcelable {
         }
         return mCover;
     }
-
+*/
     /**
      * 为了能够进行排序
      */

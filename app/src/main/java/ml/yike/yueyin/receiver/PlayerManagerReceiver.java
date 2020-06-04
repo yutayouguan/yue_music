@@ -19,8 +19,7 @@ import java.io.File;
 public class PlayerManagerReceiver extends BroadcastReceiver {
 
     public static final String ACTION_UPDATE_UI_ADAPTER = "ml.yike.yueyin.receiver.PlayerManagerReceiver:action_update_ui_adapter_broad_cast";
-
-    private MediaPlayer mediaPlayer;
+    public static MediaPlayer mediaPlayer;
 
     private DBManager dbManager;
 

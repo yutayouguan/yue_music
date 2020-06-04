@@ -351,6 +351,7 @@ public class DBManager {
             values.put(DatabaseHelper.NAME_COLUMN, musicInfo.getName());
             values.put(DatabaseHelper.SINGER_COLUMN, musicInfo.getSinger());
             values.put(DatabaseHelper.ALBUM_COLUMN, musicInfo.getAlbum());
+            values.put(DatabaseHelper.ALBUM_ID_COLUMN, musicInfo.getAlbumId());
             values.put(DatabaseHelper.DURATION_COLUMN, musicInfo.getDuration());
             values.put(DatabaseHelper.PATH_COLUMN, musicInfo.getPath());
             values.put(DatabaseHelper.PARENT_PATH_COLUMN, musicInfo.getParentPath());
@@ -467,8 +468,34 @@ public class DBManager {
         }
         return path;
     }
+
+
     /**
-     * 获取歌曲的路径
+     * 获取歌曲专辑ID
+     */
+    public int getMusicAlbumId(int id) {
+        if (id == -1) {
+            return -1;
+        }
+        int albumId = -1;
+        Cursor cursor = null;
+        setLastPlay(id);   //每次播放一首新歌前都需要获取歌曲路径，所以可以在此设置最近播放
+        try {
+            cursor = db.query(DatabaseHelper.MUSIC_TABLE, null, ID_COLUMN + " = ?", new String[]{"" + id}, null, null, null);
+            if (cursor.moveToFirst()) {
+                albumId= cursor.getInt(cursor.getColumnIndex(DatabaseHelper.ALBUM_ID_COLUMN));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return albumId;
+    }
+    /**
+     * 获取歌曲的父路径
      */
     public String getMusicParentPath(int id) {
         if (id == -1) {
@@ -666,7 +693,7 @@ public class DBManager {
         return musicId;
     }
 
-    //保留最近的20首
+    //保留最近的25首
     public void setLastPlay(int id) {
         Log.i(TAG, "setLastPlay: id = " + id);
         if (id == -1 || id == 0) {
@@ -685,13 +712,13 @@ public class DBManager {
                 }
             }
             db.delete(DatabaseHelper.LAST_PLAY_TABLE, null, null);
-            if (lastList.size() < 20) {
+            if (lastList.size() < 25) {
                 for (int i = 0; i < lastList.size(); i++) {
                     values.put(ID_COLUMN, lastList.get(i));
                     db.insert(DatabaseHelper.LAST_PLAY_TABLE, null, values);
                 }
             } else {
-                for (int i = 0; i < 20; i++) {
+                for (int i = 0; i < 25; i++) {
                     values.put(ID_COLUMN, lastList.get(i));
                     db.insert(DatabaseHelper.LAST_PLAY_TABLE, null, values);
                 }
@@ -727,6 +754,7 @@ public class DBManager {
                     String name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.NAME_COLUMN));
                     String singer = cursor.getString(cursor.getColumnIndex(DatabaseHelper.SINGER_COLUMN));
                     String album = cursor.getString(cursor.getColumnIndex(DatabaseHelper.ALBUM_COLUMN));
+                    int album_id=cursor.getInt(cursor.getColumnIndex(DatabaseHelper.ALBUM_ID_COLUMN));
                     String duration = cursor.getString(cursor.getColumnIndex(DatabaseHelper.DURATION_COLUMN));
                     String path = cursor.getString(cursor.getColumnIndex(DatabaseHelper.PATH_COLUMN));
                     String parentPath = cursor.getString(cursor.getColumnIndex(DatabaseHelper.PARENT_PATH_COLUMN));
@@ -738,6 +766,7 @@ public class DBManager {
                     musicInfo.setName(name);
                     musicInfo.setSinger(singer);
                     musicInfo.setAlbum(album);
+                    musicInfo.setAlbumId(album_id);
                     musicInfo.setPath(path);
                     musicInfo.setParentPath(parentPath);
                     musicInfo.setLove(love);

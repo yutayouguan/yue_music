@@ -1,7 +1,7 @@
 package ml.yike.yueyin.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.MotionEvent;
 

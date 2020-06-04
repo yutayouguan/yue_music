@@ -6,10 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,7 +21,17 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import ml.yike.yueyin.R;
 import ml.yike.yueyin.database.DBManager;
@@ -35,11 +42,6 @@ import ml.yike.yueyin.util.Constant;
 import ml.yike.yueyin.util.MyMusicUtil;
 import ml.yike.yueyin.view.MusicPopMenuWindow;
 import ml.yike.yueyin.view.SideBar;
-import com.mcxtzhang.swipemenulib.SwipeMenuLayout;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class ModelActivity extends PlayBarBaseActivity {
 
@@ -141,6 +143,7 @@ public class ModelActivity extends PlayBarBaseActivity {
                     sendBroadcast(intent);
                 }
                 adapter.notifyItemRemoved(position);//推荐用这个
+
                 updateView();
                 //如果删除时，不使用mAdapter.notifyItemRemoved(pos)，则删除没有动画效果，
                 //且如果想让侧滑菜单同时关闭，需要同时调用 ((CstSwipeDelMenu) holder.itemView).quickClose();
@@ -260,7 +263,7 @@ public class ModelActivity extends PlayBarBaseActivity {
 
 
     public void showPopFormBottom(MusicInfo musicInfo) {
-        MusicPopMenuWindow menuPopupWindow = new MusicPopMenuWindow(ModelActivity.this, musicInfo, findViewById(R.id.activity_model),Constant.ACTIVITY_LOCAL);
+        MusicPopMenuWindow menuPopupWindow = new MusicPopMenuWindow(ModelActivity.this, musicInfo, findViewById(R.id.activity_model), Constant.ACTIVITY_LOCAL);
 //      设置Popupwindow显示位置（从底部弹出）
         menuPopupWindow.showAtLocation(findViewById(R.id.activity_model), Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         WindowManager.LayoutParams params = ModelActivity.this.getWindow().getAttributes();
@@ -310,7 +313,7 @@ public class ModelActivity extends PlayBarBaseActivity {
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(PlayerManagerReceiver.ACTION_UPDATE_UI_ADAPTER);
             this.registerReceiver(mReceiver, intentFilter);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -320,16 +323,15 @@ public class ModelActivity extends PlayBarBaseActivity {
             if (mReceiver != null) {
                 this.unregisterReceiver(mReceiver);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private class UpdateReceiver extends BroadcastReceiver{
+    private class UpdateReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             adapter.notifyDataSetChanged();
-            Toast.makeText(context, "ModeActivity!!!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -348,7 +350,8 @@ public class ModelActivity extends PlayBarBaseActivity {
 
         private OnItemClickListener onItemClickListener;
 
-        public ModelAdapter() {}
+        public ModelAdapter() {
+        }
 
         class ViewHolder extends RecyclerView.ViewHolder {
             View swipeContent;
@@ -433,11 +436,11 @@ public class ModelActivity extends PlayBarBaseActivity {
             int defaultTvColor = typed.getColor(0, getResources().getColor(R.color.grey700));
             typedArray.recycle();
 
-            if (musicInfo.getId() == MyMusicUtil.getIntSharedPreference(Constant.KEY_ID)){
+            if (musicInfo.getId() == MyMusicUtil.getIntSharedPreference(Constant.KEY_ID)) {
                 holder.musicName.setTextColor(appbg);
                 holder.musicIndex.setTextColor(appbg);
                 holder.musicSinger.setTextColor(appbg);
-            }else {
+            } else {
                 holder.musicName.setTextColor(defaultTvColor);
                 holder.musicIndex.setTextColor(getResources().getColor(R.color.grey700));
                 holder.musicSinger.setTextColor(getResources().getColor(R.color.grey700));
