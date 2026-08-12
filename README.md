@@ -1,3 +1,5 @@
+
+
 # yue_music
 基于Android的可视化音乐播放器
 
@@ -58,7 +60,7 @@ com.github.bumptech.glide:glide:4.11.0
 ```
 
 ```
-com.squareup.okhttp3:okhttp:4.5.0'
+com.squareup.okhttp3:okhttp:4.5.0
 ```
 
 ```
@@ -68,4 +70,3 @@ com.makeramen:roundedimageview:2.3.0
 ```
 com.github.zhengken:LyricViewDemo:v1.2
 ```
-
